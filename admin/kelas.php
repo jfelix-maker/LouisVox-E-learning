@@ -102,31 +102,41 @@
                             </button>
                             <table class="table table-hover">
                       <thead>
+                      
                         <tr>
                           <th scope="col">#</th>
                           <th scope="col">Nama Kelas</th>
                           <th scope="col">Jumlah Siswa</th>
                           <th scope="col" colspan="3">Aksi</th>
                         </tr>
+                      
                       </thead>
                       <tbody>
+                      <?php
+                        $query = $conn->query("select * from kelas");
+                        $i = 1;
+                        while($data = $query->fetch_assoc()){
+                      ?>
                         <tr>
-                          <td>1</td>
-                          <td>kelas 1</td>
-                          <td>10</td>
+                          <td><?= $i++; ?></td>
+                          <td><?= $data['nm_kelas']; ?></td>
+                          <td>0</td>
                           <td>read</td>
                           <td> <button
                               type="button"
-                              class="btn btn-primary"
+                              class="btn btn-warning"
                               id="edit-kelas"
-                              data-id="1"
-                              data-kelas="XI IPA"
+                              data-id="<?= $data['id_kelas']; ?>"
+                              data-kelas="<?= $data['nm_kelas']; ?>"
                             >
                               Edit Kelas
                             </button>
                           </td>
                           <td>delete</td>
                         </tr>
+                        <?php
+                        }
+                        ?>
                       </tbody>
                     </table>
                   </div>
@@ -165,7 +175,7 @@
     <script src="../assets/js/plugin/jsvectormap/world.js"></script>
 
     <!-- Sweet Alert -->
-    <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/plugin/sweetalert/sweetalert2-11.js"></script>
 
     <!-- Kaiadmin JS -->
     <script src="../assets/js/main.min.js"></script>
@@ -173,97 +183,78 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {
+          // add kelas
             $("#form-kelas").click(function (e) {
-                swal({
-                    title: "Tambah Kelas",
-                    html: '<br><input class="form-control" placeholder="Nama Kelas" id="nm_kelas">',
-                    content: {
-                        element: "input",
-                        attributes: {
-                            placeholder: "Nama Kelas",
-                            type: "text",
-                            id: "nm_kelas",
-                            className: "form-control",
-                        },
-                    },
-                    buttons: {
-                        cancel: {
-                            visible: true,
-                            className: "btn btn-danger",
-                        },
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                }).then((result) => {
-                    if (result) {
-                        var inputValue = $("#nm_kelas").val();
-                        
-                        // Sending data to the API
-                        $.ajax({
-                            url: '<?= url("/admin/add-kelas.php"); ?>',
-                            type: 'POST',
-                            data: { input: inputValue },
-                            success: function(response) {
-                                swal("", "Berhasil menambah kelass", "success");
-                            },
-                            error: function(xhr, status, error) {
-                                swal("", "Error: " + xhr.responseText, "error");
-                            }
-                        });
-                    } else {
-                        swal("", "Batal", "error");
-                    }
-                });
-            });
-            $(document).on('click', '#edit-kelas', function() {
-                var id = $(this).data('id');
-                var nama = $(this).data('nama');
-
-                swal({
-                    title: "Edit Data",
-                    html:
-                        '<input class="form-control" placeholder="Nama Kelas" id="nm_kelas">'+
-                        '<input id="id_kelas" class="form-control" readonly value="' + id + '">' +
-                        '<input id="baru_kelas" class="form-control" placeholder="Nama Kelas" value="' + nama + '">',
-                    buttons: {
-                        cancel: {
-                            visible: true,
-                            className: "btn btn-danger",
-                        },
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                    preConfirm: function() {
-                        return new Promise(function(resolve) {
-                            resolve({
-                                id: id,
-                                nama: document.getElementById('baru_kelas').value
+              swal.fire({
+                  title: "Tambah Kelas",
+                  html: '<br><input class="form-control" placeholder="Nama Kelas" id="nm_kelas">',
+                  showCancelButton: true,
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: true,
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      var nm_kelas = $("#nm_kelas").val();
+                      
+                      // Sending data to the API
+                      $.ajax({
+                          url: '<?= url("/admin/do-kelas.php")?>',
+                          type: 'POST',
+                          data: { namaKelas: nm_kelas },
+                          success: function(response) {
+                            swal.fire({
+                                title: "",
+                                text: "Success",
+                                icon: "success"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
                             });
-                        });
-                    }
-                }).then((result) => {
-                    if (result) {
-                        var editData = result.value;
-
-                        // Sending data to the API
-                        $.ajax({
-                            url: '<?= url("/admin/edit-kelas.php"); ?>',
-                            type: 'POST',
-                            data: editData,
-                            success: function(response) {
-                                swal("", "Success: " + response.message, "success");
-                            },
-                            error: function(xhr, status, error) {
-                                swal("", "Error: " + xhr.responseText, "error");
-                            }
-                        });
-                    } else {
-                        swal("", "Batal", "error");
-                    }
-                });
+                          },
+                          error: function(xhr, status, error) {
+                              swal.fire("", "Error: " + xhr.responseText, "error");
+                          }
+                      });
+                  } else {
+                      swal.fire("", "Cancelled", "error");
+                  }
+              });
             });
+
+            // edit kelas
+            $(document).on('click', '#edit-kelas',function (e) {
+              var id = $(this).data('id');
+              var kelas = $(this).data('kelas');
+              swal.fire({
+                  title: "Edit",
+                  html: '<br><input class="form-control" placeholder="input2" value="'+kelas+'" id="nama_kelas">',
+                  showCancelButton: true,
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: true,
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      var nama_kelas = $("#nama_kelas").val();
+                      
+                      // Sending data to the API
+                      $.ajax({
+                          url: '<?= url("/admin/do-kelas.php")?>',
+                          type: 'PUT',
+                          data: { idKelas: id, namaKelas: nama_kelas},
+                          success: function(response) {
+                              swal.fire("", "Success", "success");
+                          },
+                          error: function(xhr, status, error) {
+                              swal.fire("", "Error: " + xhr.responseText, "error");
+                          }
+                      });
+                  } else {
+                      swal.fire("", "Cancelled", "error");
+                  }
+              });
+            });
+            
         };
 
         return {
