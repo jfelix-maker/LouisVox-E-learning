@@ -49,7 +49,7 @@
     <div class="wrapper">
       <!-- menu -->
        <?php
-        $menu = "index";
+        $menu = "kelas";
         require 'menu.php';
        ?>
       <!-- end menu -->
@@ -66,19 +66,19 @@
               class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
             >
             <div class="page-header">
-              <h3 class="fw-bold mb-3">Dashboard</h3>
+              <h3 class="fw-bold mb-3">Kelas</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="<?= url("/admin"); ?>">
                     <i class="icon-home"></i>
                   </a>
                 </li>
-                <!-- <li class="separator">
+                <li class="separator">
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">Forms</a>
-                </li> -->
+                  <a href="<?= url("/admin/buat-kelas.php"); ?>">Buat Kelas</a>
+                </li>
               </ul>
             </div>
               <div class="ms-md-auto py-2 py-md-0">
@@ -86,64 +86,25 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div
-                          class="icon-big text-center icon-primary bubble-shadow-small"
-                        >
-                          <i class="fas fa-users"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Kelas</p>
-                          <h4 class="card-title">1,294</h4>
-                        </div>
-                      </div>
-                    </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">Form Kelas</div>
                   </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
                   <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div
-                          class="icon-big text-center icon-info bubble-shadow-small"
-                        >
-                          <i class="fas fa-user-tie"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Guru</p>
-                          <h4 class="card-title">1303</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <div class="card card-stats card-round">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col-icon">
-                        <div
-                          class="icon-big text-center icon-success bubble-shadow-small"
-                        >
-                          <i class="fas fa-user-graduate"></i>
-                        </div>
-                      </div>
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category">Siswa</p>
-                          <h4 class="card-title">$ 1,345</h4>
-                        </div>
+                    <div class="form-group form-inline">
+                      <label
+                        for="inlineinput"
+                        class="col-md-3 col-form-label"
+                        >Inline Input</label>
+                      <div class="col-md-12 p-0">
+                        <input
+                          type="text"
+                          class="form-control input-full"
+                          id="inlineinput"
+                          placeholder="Enter Input"
+                        />
                       </div>
                     </div>
                   </div>
