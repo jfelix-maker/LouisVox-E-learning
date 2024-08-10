@@ -308,8 +308,6 @@
                               swal.fire("", "Error: " + xhr.responseText, "error");
                           }
                       });
-                  } else {
-                      swal.fire("", "Cancelled", "error");
                   }
               });
             });

@@ -264,16 +264,15 @@
                           type: 'POST',
                           data: { idUser: id, pass: password },
                           success: function(data, textStatus, xhr) {
-                            console.log(data);
-                            // swal.fire({
-                            //     title: "",
-                            //     text: "Success",
-                            //     icon: "success"
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         location.reload();
-                            //     }
-                            // });
+                            swal.fire({
+                                title: "",
+                                text: "Success",
+                                icon: "success"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
                           },
                           error: function(xhr, status, error) {
                               swal.fire("", "Error: " + xhr.responseText, "error");

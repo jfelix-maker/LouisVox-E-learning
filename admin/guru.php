@@ -89,42 +89,46 @@
                   <div class="card-title">Data Guru</div>
                 </div>
                 <div class="card-body">
-                  <form class="input-group" method="GET" action="<?= url("/admin/siswa.php");?>">
-                    <div class="input-group-prepend">
-                      <input type="text" name="nama" placeholder="Cari Guru ..." class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-search pe-1">
-                        <i class="fa fa-search search-icon"></i>
-                    </button>
-                  </form>
+                  <div class="col-md-12">
+                    <form class="input-group " method="GET" action="<?= url("/admin/guru.php");?>">
+                      <button
+                      type="button"
+                      class="btn btn-primary"
+                      id="form-guru">
+                        Tambah Guru
+                      </button>
+                      &nbsp;&nbsp;&nbsp;
+                      <div class="input-group-prepend">
+                        <input type="text" name="nama" placeholder="Cari Guru ..." class="form-control">
+                      </div>
+                      <button type="submit" class="btn btn-search pe-0 ">
+                          <i class="fa fa-search search-icon"></i>
+                      </button>                    
+                    </form>
+                  
+                  </div>
                 <table class="table table-hover">
                   <thead> 
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Nama Siswa</th>
-                        <th scope="col">Tahun Ajaran</th>
-                        <th scope="col">Masuk Tahun</th>
-                        <th scope="col">Lulus Tahun</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col">Nama Guru</th>
+                        <th scope="col" colspan="2">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
                   <?php
                     if(isset($_GET['nama'])){
                       $nama = $_GET['nama'];
-                      $query = $conn->query("SELECT * FROM siswa WHERE nm_siswa LIKE '%$nama%'");
+                      $query = $conn->query("SELECT * FROM guru WHERE nm_guru LIKE '%$nama%'");
                     }else{
-                      $query = $conn->query("select * from siswa;");
+                      $query = $conn->query("select * from guru;");
                     }
                     $i = 1;
                     while($data = $query->fetch_assoc()){
                   ?>
                     <tr>
                       <td><?= $i++; ?></td>
-                      <td><?= $data['nm_siswa']; ?></td>
-                      <td><?= $data['tahun_ajaran']; ?></td>
-                      <td> <?= $data['masuk_tahun']; ?></td>
-                      <td> <?= $data['lulus_tahun']; ?></td>
+                      <td><?= $data['nm_guru']; ?></td>
                       <td> 
                         <button
                         type="button"
@@ -132,6 +136,15 @@
                         id="reset-guru"
                         data-id="<?= $data['id_user']; ?>">
                           Reset Password
+                        </button>
+                      </td>
+                      <td> 
+                        <button
+                        type="button"
+                        class="btn btn-danger"
+                        id="del-guru"
+                        data-id="<?= $data['id_user']; ?>">
+                          Delete
                         </button>
                       </td>
                     </tr>
@@ -183,22 +196,27 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {           
-            $(document).on('click', '#reset-guru',function (e) {
-              var id = $(this).data('id');
+            $(document).on('click', '#form-guru',function (e) {
               swal.fire({
-                  title: "Reset Password",
-                  html: '<br><input class="form-control" placeholder="Password Baru" value="'+kelas+'" id="pass_guru">',
+                  title: "Tambah Guru",
+                  html: '<br><input class="form-control" placeholder="NIP" id="nip">'+
+                        '<br><input class="form-control" placeholder="Nama guru" id="nm_guru">'+
+                        '<br><input class="form-control" placeholder="Username" id="user">'+
+                        '<br><input class="form-control" placeholder="Password" id="pass">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
                   cancelButtonClass: 'btn btn-danger',
                   buttonsStyling: true,
               }).then((result) => {
                   if (result.isConfirmed) {
-                      var nama_kelas = $("#nama_kelas").val();
+                      var nip = $("#nip").val();
+                      var nm_guru = $("#nm_guru").val();
+                      var user = $("#user").val();
+                      var pass = $("#pass").val();
                       $.ajax({
-                          url: '<?= url("/admin/do-kelas.php")?>',
-                          type: 'PUT',
-                          data: JSON.stringify({ idKelas: id, namaKelas: nama_kelas }),
+                          url: '<?= url("/admin/do-guru.php")?>',
+                          type: 'POST',
+                          data: { idUser: nip, nmGuru: nm_guru, username: user, password: pass },
                           success: function(data, textStatus, xhr) {
                             console.log(data);
                             swal.fire({
@@ -206,7 +224,41 @@
                                 text: "Success",
                                 icon: "success"
                             }).then((result) => {
-                              console.log(result);
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                          },
+                          error: function(xhr, status, error) {
+                              swal.fire("", "Error: " + xhr.responseText, "error");
+                          }
+                      });
+                  }
+              });
+            });
+            $(document).on('click', '#reset-guru',function (e) {   
+              var id = $(this).data('id');
+              console.log("RESET");
+              swal.fire({
+                  title: "Reset Password Siswa",
+                  html: '<br><input class="form-control" placeholder="Password Baru" id="pass">',
+                  showCancelButton: true,
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: true,
+              }).then((result) => {
+                  if (result.isConfirmed) {
+                      var password = $("#pass").val();
+                      $.ajax({
+                          url: '<?= url("/admin/do-guru.php")?>',
+                          type: 'POST',
+                          data: { idUser: id, pass: password },
+                          success: function(data, textStatus, xhr) {
+                            swal.fire({
+                                title: "",
+                                text: "Success",
+                                icon: "success"
+                            }).then((result) => {
                                 if (result.isConfirmed) {
                                     location.reload();
                                 }
@@ -221,7 +273,42 @@
                   }
               });
             });
-
+            $(document).on('click', '#del-guru',function (e) {   
+              var id = $(this).data('id');
+              Swal.fire({
+                title: "Apakah Anda Yakin?",
+                text: "Data akan di hapus",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus Sekarang!"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  $.ajax({
+                    url: '<?= url("/admin/do-guru.php")?>',
+                    type: 'DELETE',
+                    data: JSON.stringify({ idUser: id}),
+                    success: function(data, textStatus, xhr) {
+                    console.log(data);
+                    swal.fire({
+                      title: "",
+                      text: "Guru Terhapus",
+                      icon: "success"
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        location.reload();
+                      }
+                    });
+                    },
+                    error: function(xhr, status, error) {
+                      swal.fire("", "Error: " + xhr.responseText, "error");
+                    }
+                  });
+              
+                }
+              });
+            });  
             
         };
 

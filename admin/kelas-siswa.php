@@ -22,13 +22,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   $_PUT = json_decode(file_get_contents('php://input'), true);
   $tahun_ajaran = $_PUT['tahunAjaran'];
   $id_kelas = $_PUT['idKelas'];
-
-  $conn->query("UPDATE `siswa` SET `tahun_ajaran`='$tahun_ajaran' WHERE id_kelas = '$id_kelas'");
-  $response = [
-    'message' => "succes update siswa",
-  ];
-  http_response_code(200);
+  $cek = $conn->query("SELECT tahun_ajaran FROM `siswa` WHERE id_kelas = '$id_kelas' GROUP BY tahun_ajaran");
+  if($cek->num_rows == 0){
+    $response = "Minimal Terdapat 1 Siswa";
+    http_response_code(400);
+  }else{
+    $conn->query("UPDATE `siswa` SET `tahun_ajaran`='$tahun_ajaran' WHERE id_kelas = '$id_kelas'");
+    $response = json_encode([
+      'message' => "succes update siswa",
+    ]);
+    http_response_code(200);
+  }
   // header('Content-Type: application/json');
-  echo json_encode($response);
+  echo $response;
 }
 ?>
