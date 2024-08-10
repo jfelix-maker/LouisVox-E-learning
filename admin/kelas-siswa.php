@@ -5,7 +5,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = "Data Siswa Belum Di Isi Lengkap";
     http_response_code(400);
   }else{
-    var_dump($_POST);
     $id_user = $_POST['idUser'];
     $nm_siswa = $_POST['nmSiswa'];
     $id_kelas = $_POST['idKelas'];
@@ -14,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     $conn->query("INSERT INTO `user`(`id_user`, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','3')");
-    $conn->query("INSERT INTO `siswa`(`id_user`, `id_kelas`, `nm_siswa`, `masuk_tahun`, tahun_ajar) VALUES ('$id_user','$id_kelas',' $nm_siswa','$tahun_masuk', 0)");
+    $conn->query("INSERT INTO `siswa`(`id_user`, `id_kelas`, `nm_siswa`, `masuk_tahun`, tahun_ajaran) VALUES ('$id_user','$id_kelas',' $nm_siswa','$tahun_masuk', '0')");
     http_response_code(200);
     $response = "Berhasil menambah siswa";
   }

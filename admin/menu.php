@@ -46,7 +46,7 @@
                   <p>Kelas</p>
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item <?= ($menu == "guru") ? "active" : ""; ?>">
                 <a data-bs-toggle="collapse" href="#guru">
                   <i class="fas fa-user-tie"></i>
                   <p>Guru</p>

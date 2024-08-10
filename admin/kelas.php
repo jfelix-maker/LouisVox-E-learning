@@ -120,15 +120,16 @@
                             ?>
                             <select class="form-select" id="tahun-ajar">
                               <?php
-                              if($d_th['tahun_ajaran'] == 0){
+                              if($d_th['tahun_ajaran'] == 0 || $qu_th->num_rows == 0){
+                                $d_th['tahun_ajaran'] = 0;
                               ?>
                               <option value="0" selected>Kosong</option>
                               <?php
                               }
                               for($tahun = $env['TAHUN']; $tahun < date("Y")+5; $tahun++){
                               ?>
-                              <option <?= ($d_th['tahun_ajaran'] == $tahun.'.1') ? 'selected' : ''; ?> value="<?= $tahun; ?>.1"><?= $tahun; ?> Ganjil</option>
-                              <option <?= ($d_th['tahun_ajaran'] == $tahun.'.2') ? 'selected' : ''; ?> value="<?= $tahun; ?>.2"><?= $tahun; ?> Genap</option>
+                              <option <?= ($d_th['tahun_ajaran'] == $tahun.'.1' || false) ? 'selected' : ''; ?> value="<?= $tahun; ?>.1"><?= $tahun; ?> Ganjil</option>
+                              <option <?= ($d_th['tahun_ajaran'] == $tahun.'.2' || false) ? 'selected' : ''; ?> value="<?= $tahun; ?>.2"><?= $tahun; ?> Genap</option>
                               <?php
                                 }
                               ?>
@@ -353,11 +354,11 @@
              $("#form-siswa").click(function (e) {
               swal.fire({
                   title: "Tambah Siswa",
-                  html: '<br><input class="form-control" placeholder="NISN" id="nisn" required>'+
-                        '<br><input class="form-control" placeholder="Nama Siswa" id="nm_siswa" required>'+
+                  html: '<br><input class="form-control" placeholder="NISN" id="nisn">'+
+                        '<br><input class="form-control" placeholder="Nama Siswa" id="nm_siswa">'+
                         '<br><input class="form-control" placeholder="Tahun Masuk" id="tahun_masuk">'+
-                        '<br><input class="form-control" placeholder="Username" id="username" required>'+
-                        '<br><input class="form-control" placeholder="Password" id="password" required>',
+                        '<br><input class="form-control" placeholder="Username" id="username">'+
+                        '<br><input class="form-control" placeholder="Password" id="password">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
                   cancelButtonClass: 'btn btn-danger',
@@ -381,7 +382,8 @@
                             username: user,
                             password: pass
                           },
-                          success: function(response) {
+                          success: function(data, textStatus, xhr) {
+                            console.log(data);
                             swal.fire({
                                 title: "",
                                 text: "Success",

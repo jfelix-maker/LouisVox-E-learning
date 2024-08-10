@@ -16,4 +16,12 @@ function url($url){
     global $env;
     return $env['BASE_URL'].$url;
 }
+function tahun_ajar($tahun_ajaran = 0){
+    if($tahun_ajaran == 0){
+        return "";
+    }
+    $th = explode(".",$tahun_ajaran);
+    $semester = ($th["1"] > 1 ? " Genap" : " Ganjil");
+    return $th[0].$semester;
+}
 ?>

@@ -49,7 +49,7 @@
     <div class="wrapper">
       <!-- menu -->
        <?php
-        $menu = "siswa";
+        $menu = "guru";
         require 'menu.php';
 
        ?>
@@ -65,7 +65,7 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div class="page-header">
-                <h3 class="fw-bold mb-3">Siswa</h3>
+                <h3 class="fw-bold mb-3">Guru</h3>
                 <ul class="breadcrumbs mb-3">
                   <li class="nav-home">
                     <a href="<?= url("/admin"); ?>">
@@ -76,7 +76,7 @@
                     <i class="icon-arrow-right"></i>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= url("/admin/siswa.php"); ?>">Siswa</a>
+                    <a href="<?= url("/admin/guru.php"); ?>">Guru</a>
                   </li>
                 </ul>
               </div>
@@ -86,12 +86,12 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Data Siswa</div>
+                  <div class="card-title">Data Guru</div>
                 </div>
                 <div class="card-body">
                   <form class="input-group" method="GET" action="<?= url("/admin/siswa.php");?>">
                     <div class="input-group-prepend">
-                      <input type="text" name="nama" placeholder="Cari Siswa ..." class="form-control">
+                      <input type="text" name="nama" placeholder="Cari Guru ..." class="form-control">
                     </div>
                     <button type="submit" class="btn btn-search pe-1">
                         <i class="fa fa-search search-icon"></i>
@@ -102,20 +102,19 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nama Siswa</th>
-                        <th scope="col">Kelas</th>
                         <th scope="col">Tahun Ajaran</th>
                         <th scope="col">Masuk Tahun</th>
                         <th scope="col">Lulus Tahun</th>
-                        <th scope="col" colspan="3">Aksi</th>
+                        <th scope="col">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
                   <?php
                     if(isset($_GET['nama'])){
                       $nama = $_GET['nama'];
-                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas AND s.nm_siswa LIKE '%$nama%'");
+                      $query = $conn->query("SELECT * FROM siswa WHERE nm_siswa LIKE '%$nama%'");
                     }else{
-                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas");
+                      $query = $conn->query("select * from siswa;");
                     }
                     $i = 1;
                     while($data = $query->fetch_assoc()){
@@ -123,36 +122,16 @@
                     <tr>
                       <td><?= $i++; ?></td>
                       <td><?= $data['nm_siswa']; ?></td>
-                      <td><?= $data['nm_kelas']; ?></td>
-                      <td><?= tahun_ajar($data['tahun_ajaran']); ?></td>
+                      <td><?= $data['tahun_ajaran']; ?></td>
                       <td> <?= $data['masuk_tahun']; ?></td>
                       <td> <?= $data['lulus_tahun']; ?></td>
                       <td> 
                         <button
                         type="button"
-                        class="btn btn-warning"
-                        id="edit-siswa"
-                        data-id="<?= $data['id_user']; ?>"
-                        data-nm="<?= $data['nm_siswa']; ?>"
-                        data-mt="<?= $data['masuk_tahun']; ?>"
-                        data-tl="<?= $data['lulus_tahun']; ?>">
-                          Edit
-                        </button>
-                      </td>
-                      <td><button
-                        type="button"
                         class="btn btn-danger"
-                        id="reset-siswa"
+                        id="reset-guru"
                         data-id="<?= $data['id_user']; ?>">
                           Reset Password
-                        </button>
-                      </td>
-                      <td><button
-                        type="button"
-                        class="btn btn-danger"
-                        id="del-siswa"
-                        data-id="<?= $data['id_user']; ?>">
-                          Delete
                         </button>
                       </td>
                     </tr>
@@ -204,29 +183,22 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {           
-            $(document).on('click', '#edit-siswa',function (e) {
+            $(document).on('click', '#reset-guru',function (e) {
               var id = $(this).data('id');
-              var masuk_tahun = $(this).data('mt');
-              var tahun_lulus = $(this).data('tl');
-              var nm_siswa = $(this).data('nm');
               swal.fire({
-                  title: "Edit",
-                  html: '<br><input class="form-control" value="'+nm_siswa+'" id="nama_siswa">'+
-                        '<br><input class="form-control" placeholder="Masuk Tahun" value="'+masuk_tahun+'" id="masuk_tahun">'+
-                        '<br><input class="form-control" placeholder="Nama Siswa" value="'+tahun_lulus+'" id="tahun_lulus">',
+                  title: "Reset Password",
+                  html: '<br><input class="form-control" placeholder="Password Baru" value="'+kelas+'" id="pass_guru">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
                   cancelButtonClass: 'btn btn-danger',
                   buttonsStyling: true,
               }).then((result) => {
                   if (result.isConfirmed) {
-                    var nm = $("#nama_siswa").val();
-                    var mt = $("#masuk_tahun").val();
-                    var tl = $("#tahun_lulus").val();
+                      var nama_kelas = $("#nama_kelas").val();
                       $.ajax({
-                          url: '<?= url("/admin/do-siswa.php")?>',
+                          url: '<?= url("/admin/do-kelas.php")?>',
                           type: 'PUT',
-                          data: JSON.stringify({ idUser: id, masukTahun: mt, tahunLulus: tl, nmSiswa: nm}),
+                          data: JSON.stringify({ idKelas: id, namaKelas: nama_kelas }),
                           success: function(data, textStatus, xhr) {
                             console.log(data);
                             swal.fire({
@@ -244,82 +216,13 @@
                               swal.fire("", "Error: " + xhr.responseText, "error");
                           }
                       });
-                  }
-              });
-            });
-            $(document).on('click', '#reset-siswa',function (e) {   
-              var id = $(this).data('id');
-              swal.fire({
-                  title: "Reset Password Siswa",
-                  html: '<br><input class="form-control" placeholder="Password Baru" id="pass">',
-                  showCancelButton: true,
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
-                  buttonsStyling: true,
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      var password = $("#pass").val();
-                      $.ajax({
-                          url: '<?= url("/admin/do-siswa.php")?>',
-                          type: 'POST',
-                          data: { idUser: id, pass: password },
-                          success: function(data, textStatus, xhr) {
-                            console.log(data);
-                            // swal.fire({
-                            //     title: "",
-                            //     text: "Success",
-                            //     icon: "success"
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         location.reload();
-                            //     }
-                            // });
-                          },
-                          error: function(xhr, status, error) {
-                              swal.fire("", "Error: " + xhr.responseText, "error");
-                          }
-                      });
                   } else {
                       swal.fire("", "Cancelled", "error");
                   }
               });
             });
-            $(document).on('click', '#del-siswa',function (e) {   
-              var id = $(this).data('id');
-              Swal.fire({
-                title: "Apakah Anda Yakin?",
-                text: "Data akan di hapus",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus Sekarang!"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  $.ajax({
-                    url: '<?= url("/admin/do-siswa.php")?>',
-                    type: 'DELETE',
-                    data: JSON.stringify({ idUser: id}),
-                    success: function(data, textStatus, xhr) {
-                    console.log(data);
-                    swal.fire({
-                      title: "",
-                      text: "Siswa Terhapus",
-                      icon: "success"
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        location.reload();
-                      }
-                    });
-                    },
-                    error: function(xhr, status, error) {
-                      swal.fire("", "Error: " + xhr.responseText, "error");
-                    }
-                  });
-              
-                }
-              });
-            });         
+
+            
         };
 
         return {

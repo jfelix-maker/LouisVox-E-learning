@@ -3,7 +3,7 @@ require '../config.php';
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
   if(isset($_POST['namaKelas']) && $_POST['namaKelas'] != ""){
     $nm_kelas = $_POST['namaKelas'];
-    // $conn->query("INSERT INTO kelas(nm_kelas) VALUES ('$nm_kelas')");
+    $conn->query("INSERT INTO kelas(nm_kelas) VALUES ('$nm_kelas')");
     $response = "Berhasil Tambah Kelas";
     http_response_code(200);
   }else{
