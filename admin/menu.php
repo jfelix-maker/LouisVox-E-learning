@@ -55,7 +55,7 @@
                 <div class="collapse" id="guru">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="#">
+                      <a href="<?= url("/admin/guru.php"); ?>">
                         <span class="sub-item">Data Guru</span>
                       </a>
                     </li>
@@ -67,13 +67,12 @@
                   </ul>
                 </div>
               </li>
-              <li class="nav-item">
-                <a href="#">
+              <li class="nav-item <?= ($menu == "siswa") ? "active" : ""; ?>">
+                <a href="<?= url("/admin/siswa.php"); ?>">
                   <i class="fas fa-user-graduate"></i>
                   <p>Siswa</p>
                 </a>
-              </li>
-              
+              </li>              
             </ul>
           </div>
         </div>

@@ -15,24 +15,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   echo $response;
 }else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $_PUT = json_decode(file_get_contents('php://input'), true);
+  var_dump($_PUT);
   $nm_kelas = $_PUT['namaKelas'];
   $id_kelas = $_PUT['idKelas'];
+
   $conn->query("UPDATE kelas SET nm_kelas='$nm_kelas' WHERE id_kelas = '$id_kelas'");
   $response = [
     'message' => "succes update kelas",
   ];
   http_response_code(200);
   // header('Content-Type: application/json');
-  echo json_encode($response);
-}else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-  $_DELETE = json_decode(file_get_contents('php://input'), true);
-  $id_kelas = $_DELETE['idKelas'];
-  $response = [
-    'message' => "succes delete kelas",
-  ];
-  $conn->query("DELETE siswa FROM user JOIN siswa ON user.id_user = siswa.id_user WHERE siswa.id_kelas = $id_kelas;");
-  $conn->query("DELETE FROM kelas WHERE id_kelas = $id_kelas;");
-  http_response_code(200);
   echo json_encode($response);
 }
 ?>
