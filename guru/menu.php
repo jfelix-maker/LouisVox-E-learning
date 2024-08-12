@@ -60,7 +60,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="<?= url("/admin/mata-pelajaran.php"); ?>">
+                      <a href="#">
                         <span class="sub-item">Data Mata Pelajaran</span>
                       </a>
                     </li>

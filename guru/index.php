@@ -1,12 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['user']) || $_SESSION['level'] != 1) {
-    header("Location: ../index.php");
-    exit;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -151,7 +142,7 @@ if (!isset($_SESSION['user']) || $_SESSION['level'] != 1) {
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Siswa</p>
-                          <h4 class="card-title">1,345</h4>
+                          <h4 class="card-title">$ 1,345</h4>
                         </div>
                       </div>
                     </div>

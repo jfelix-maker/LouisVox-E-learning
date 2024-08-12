@@ -2,22 +2,37 @@
 session_start();
 
 if (isset($_SESSION['user'])) {
-    header("Location: dashboard.php");
+    if ($_SESSION['level'] == 1) {
+        header("Location: admin/index.php");
+    } elseif ($_SESSION['level'] == 2) {
+        header("Location: guru/index.php");
+    } elseif ($_SESSION['level'] == 3) {
+        header("Location: siswa/index.php");
+    }
     exit;
 }
-
 require_once "config.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['cEmail']) && isset($_GET['cPassword'])) {
-    $cemail = $_GET["cEmail"];
-    $cpassword = ($_GET["cPassword"]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cEmail']) && isset($_POST['cPassword'])) {
+    $cemail = $_POST["cEmail"]; 
+    $cpassword = $_POST["cPassword"];
 
-    $query = $conn->query("SELECT * FROM user WHERE username = '$cemail' AND password = '$cpassword'");
+    $query = $conn->query("SELECT uid, username, level FROM tbuser WHERE username = '$cemail' AND password = '$cpassword'");
     
     if ($query->num_rows > 0) {
         $result = $query->fetch_assoc();
-        $_SESSION['user'] = $cemail;
-        header("Location: dashboard.php");
+        $_SESSION['user'] = $cemail; 
+        $_SESSION['level'] = $result['level'];
+        $_SESSION['uid'] = $result['uid'];
+        
+        if ($_SESSION['level'] == 1) {
+            header("Location: admin/index.php");
+        } elseif ($_SESSION['level'] == 2) {
+            header("Location: guru/index.php");
+        } elseif ($_SESSION['level'] == 3) {
+            header("Location: siswa/index.php");
+        }
+        exit;
     } else {
         $error_message = 'Email atau password salah';
     }
@@ -48,7 +63,7 @@ mysqli_close($conn);
                     <img src="images/img-01.png" alt="IMG">
                 </div>
 
-                <form class="login100-form validate-form" action="" method="">
+                <form class="login100-form validate-form" action="" method="POST">
                     <span class="login100-form-title">Member Login</span>
 
                     <?php if (isset($error_message)): ?>

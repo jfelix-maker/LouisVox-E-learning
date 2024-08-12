@@ -113,9 +113,9 @@
                   <?php
                     if(isset($_GET['nama'])){
                       $nama = $_GET['nama'];
-                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas AND s.nm_siswa LIKE '%$nama%'");
+                      $query = $conn->query("SELECT * FROM tbsiswa s, tbkelas k WHERE s.id_kelas = k.id_kelas AND s.nm_siswa LIKE '%$nama%'");
                     }else{
-                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas");
+                      $query = $conn->query("SELECT * FROM tbsiswa s, tbkelas k WHERE s.id_kelas = k.id_kelas");
                     }
                     $i = 1;
                     while($data = $query->fetch_assoc()){

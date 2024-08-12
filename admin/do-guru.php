@@ -4,18 +4,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   if(isset($_POST['pass']) && $_POST['pass'] != ""){
     $password = $_POST['pass'];
     $id = $_POST['idUser'];
-    $conn->query("UPDATE `user` SET `password`='$password' WHERE id_user = '$id'");
+    $conn->query("UPDATE tbuser SET `password`='$password' WHERE uid = '$id'");
     $response = "Berhasil Reset Password Siswa";
     http_response_code(200);
   }else if($_POST['idUser'] != "" && $_POST['nmGuru'] != "" && $_POST['username'] != "" && $_POST['password'] != ""){
     var_dump($_POST);
     $id_user = $_POST['idUser'];
     $nm_guru = $_POST['nmGuru'];
+    $tahun_masuk = $_POST['thMasuk'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $conn->query("INSERT INTO `guru`(`id_user`, `nm_guru`) VALUES ('$id_user', '$nm_guru');");
-    $conn->query("INSERT INTO `user`(`id_user`, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','2');");
-    $response = "Berhasil Tambah Kelas";
+    $conn->query("INSERT INTO tbguru(`id_user`, `nm_guru`, masuk_tahun) VALUES ('$id_user', '$nm_guru', '$tahun_masuk');");
+    $conn->query("INSERT INTO tbuser(uid, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','2');");
+    $response = "Berhasil Tambah Guru";
     http_response_code(200);
   }else{
     $response = "Inputan Wajib Di isi";
@@ -24,17 +25,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   echo $response;
 }else if($_SERVER['REQUEST_METHOD'] === 'PUT') {
   $_PUT = json_decode(file_get_contents('php://input'), true);
-  if($_PUT['masukTahun'] == "" || $_PUT['tahunLulus'] == "" || $_PUT['nmSiswa'] == ""){
-    $response = "Data Siswa Wajib Di isi";
+  if($_PUT['nmGuru'] == "" || $_PUT['tahunMasuk'] == "" || $_PUT['tahunKeluar'] == ""){
+    $response = "Data Guru Wajib Di isi";
     http_response_code(400);
   }else{
     $id = $_PUT["idUser"];
-    $masuk_tahun = $_PUT["masukTahun"];
-    $tahun_lulus = $_PUT["tahunLulus"];
-    $nm_siswa = $_PUT["nmSiswa"];
-    $conn->query("UPDATE `siswa` SET `nm_siswa`='$nm_siswa',`masuk_tahun`=$masuk_tahun,`lulus_tahun`=$tahun_lulus WHERE id_user = $id");
+    $masuk_tahun = $_PUT["tahunMasuk"];
+    $tahun_lulus = $_PUT["tahunKeluar"];
+    $nm_guru = $_PUT["nmGuru"];
+    $conn->query("UPDATE `tbguru` SET `nm_guru`='$nm_guru',`masuk_tahun`='$masuk_tahun',`keluar_tahun`='$tahun_lulus' WHERE id_user = $id");
     $response = json_encode([
-      'message' => "succes update siswa",
+      'message' => "succes update guru",
     ]);
     http_response_code(200);
   }
@@ -43,10 +44,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   $_DELETE = json_decode(file_get_contents('php://input'), true);
   $id = $_DELETE['idUser'];
   $response = [
-    'message' => "succes delete kelas",
+    'message' => "succes delete guru",
   ];
-  $conn->query("DELETE FROM user WHERE id_user = $id;");
-  $conn->query("DELETE FROM guru WHERE id_user = $id;");
+  $conn->query("DELETE FROM tbuser WHERE uid = $id;");
+  $conn->query("DELETE FROM tbguru WHERE id_user = $id;");
 
   http_response_code(200);
   echo json_encode($response);

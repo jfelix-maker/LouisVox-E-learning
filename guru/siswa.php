@@ -49,7 +49,7 @@
     <div class="wrapper">
       <!-- menu -->
        <?php
-        $menu = "guru";
+        $menu = "siswa";
         require 'menu.php';
 
        ?>
@@ -65,7 +65,7 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div class="page-header">
-                <h3 class="fw-bold mb-3">Guru</h3>
+                <h3 class="fw-bold mb-3">Siswa</h3>
                 <ul class="breadcrumbs mb-3">
                   <li class="nav-home">
                     <a href="<?= url("/admin"); ?>">
@@ -76,7 +76,7 @@
                     <i class="icon-arrow-right"></i>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= url("/admin/guru.php"); ?>">Guru</a>
+                    <a href="<?= url("/admin/siswa.php"); ?>">Siswa</a>
                   </li>
                 </ul>
               </div>
@@ -86,34 +86,26 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Data Guru</div>
+                  <div class="card-title">Data Siswa</div>
                 </div>
                 <div class="card-body">
-                  <div class="col-md-12">
-                    <form class="input-group " method="GET" action="<?= url("/admin/guru.php");?>">
-                      <button
-                      type="button"
-                      class="btn btn-primary"
-                      id="form-guru">
-                        Tambah Guru
-                      </button>
-                      &nbsp;&nbsp;&nbsp;
-                      <div class="input-group-prepend">
-                        <input type="text" name="nama" placeholder="Cari Guru ..." class="form-control">
-                      </div>
-                      <button type="submit" class="btn btn-search pe-0 ">
-                          <i class="fa fa-search search-icon"></i>
-                      </button>                    
-                    </form>
-                  
-                  </div>
+                  <form class="input-group" method="GET" action="<?= url("/admin/siswa.php");?>">
+                    <div class="input-group-prepend">
+                      <input type="text" name="nama" placeholder="Cari Siswa ..." class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-search pe-1">
+                        <i class="fa fa-search search-icon"></i>
+                    </button>
+                  </form>
                 <table class="table table-hover">
                   <thead> 
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Nama Guru</th>
-                        <th scope="col">Tahun Masuk</th>
-                        <th scope="col">Tahun Keluar</th>
+                        <th scope="col">Nama Siswa</th>
+                        <th scope="col">Kelas</th>
+                        <th scope="col">Tahun Ajaran</th>
+                        <th scope="col">Masuk Tahun</th>
+                        <th scope="col">Lulus Tahun</th>
                         <th scope="col" colspan="3">Aksi</th>
                       </tr>    
                   </thead>
@@ -121,45 +113,44 @@
                   <?php
                     if(isset($_GET['nama'])){
                       $nama = $_GET['nama'];
-                      $query = $conn->query("SELECT * FROM tbguru WHERE nm_guru LIKE '%$nama%'");
+                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas AND s.nm_siswa LIKE '%$nama%'");
                     }else{
-                      $query = $conn->query("SELECT * FROM tbguru;");
+                      $query = $conn->query("SELECT * FROM siswa s, kelas k WHERE s.id_kelas = k.id_kelas");
                     }
                     $i = 1;
                     while($data = $query->fetch_assoc()){
                   ?>
                     <tr>
                       <td><?= $i++; ?></td>
-                      <td><?= $data['nm_guru']; ?></td>
-                      <td><?= $data['masuk_tahun']; ?></td>
-                      <td><?= $data['keluar_tahun']; ?></td>
+                      <td><?= $data['nm_siswa']; ?></td>
+                      <td><?= $data['nm_kelas']; ?></td>
+                      <td><?= tahun_ajar($data['tahun_ajaran']); ?></td>
+                      <td> <?= $data['masuk_tahun']; ?></td>
+                      <td> <?= $data['lulus_tahun']; ?></td>
                       <td> 
                         <button
                         type="button"
                         class="btn btn-warning"
-                        id="edit-guru"
+                        id="edit-siswa"
                         data-id="<?= $data['id_user']; ?>"
-                        data-nm="<?= $data['nm_guru']; ?>"
+                        data-nm="<?= $data['nm_siswa']; ?>"
                         data-mt="<?= $data['masuk_tahun']; ?>"
-                        data-kt="<?= $data['keluar_tahun']; ?>">
-
+                        data-tl="<?= $data['lulus_tahun']; ?>">
                           Edit
                         </button>
                       </td>
-                      <td> 
-                        <button
+                      <td><button
                         type="button"
                         class="btn btn-danger"
-                        id="reset-guru"
+                        id="reset-siswa"
                         data-id="<?= $data['id_user']; ?>">
                           Reset Password
                         </button>
                       </td>
-                      <td> 
-                        <button
+                      <td><button
                         type="button"
                         class="btn btn-danger"
-                        id="del-guru"
+                        id="del-siswa"
                         data-id="<?= $data['id_user']; ?>">
                           Delete
                         </button>
@@ -213,29 +204,29 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {           
-            $(document).on('click', '#form-guru',function (e) {
+            $(document).on('click', '#edit-siswa',function (e) {
+              var id = $(this).data('id');
+              var masuk_tahun = $(this).data('mt');
+              var tahun_lulus = $(this).data('tl');
+              var nm_siswa = $(this).data('nm');
               swal.fire({
-                  title: "Tambah Guru",
-                  html: '<br><input class="form-control" placeholder="NIP" id="nip">'+
-                        '<br><input class="form-control" placeholder="Nama Guru" id="nm_guru">'+
-                        '<br><input class="form-control" placeholder="Tahun Masuk" id="th_masuk">'+
-                        '<br><input class="form-control" placeholder="Username" id="user">'+
-                        '<br><input class="form-control" placeholder="Password" id="pass">',
+                  title: "Edit",
+                  html: '<br><input class="form-control" value="'+nm_siswa+'" id="nama_siswa">'+
+                        '<br><input class="form-control" placeholder="Masuk Tahun" value="'+masuk_tahun+'" id="masuk_tahun">'+
+                        '<br><input class="form-control" placeholder="Nama Siswa" value="'+tahun_lulus+'" id="tahun_lulus">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
                   cancelButtonClass: 'btn btn-danger',
                   buttonsStyling: true,
               }).then((result) => {
                   if (result.isConfirmed) {
-                      var nip = $("#nip").val();
-                      var nm_guru = $("#nm_guru").val();
-                      var th_masuk = $("#th_masuk").val();
-                      var user = $("#user").val();
-                      var pass = $("#pass").val();
+                    var nm = $("#nama_siswa").val();
+                    var mt = $("#masuk_tahun").val();
+                    var tl = $("#tahun_lulus").val();
                       $.ajax({
-                          url: '<?= url("/admin/do-guru.php")?>',
-                          type: 'POST',
-                          data: { idUser: nip, nmGuru: nm_guru, thMasuk: th_masuk, username: user, password: pass },
+                          url: '<?= url("/admin/do-siswa.php")?>',
+                          type: 'PUT',
+                          data: JSON.stringify({ idUser: id, masukTahun: mt, tahunLulus: tl, nmSiswa: nm}),
                           success: function(data, textStatus, xhr) {
                             console.log(data);
                             swal.fire({
@@ -243,6 +234,7 @@
                                 text: "Success",
                                 icon: "success"
                             }).then((result) => {
+                              console.log(result);
                                 if (result.isConfirmed) {
                                     location.reload();
                                 }
@@ -255,9 +247,8 @@
                   }
               });
             });
-            $(document).on('click', '#reset-guru',function (e) {   
+            $(document).on('click', '#reset-siswa',function (e) {   
               var id = $(this).data('id');
-              console.log("RESET");
               swal.fire({
                   title: "Reset Password Siswa",
                   html: '<br><input class="form-control" placeholder="Password Baru" id="pass">',
@@ -269,7 +260,7 @@
                   if (result.isConfirmed) {
                       var password = $("#pass").val();
                       $.ajax({
-                          url: '<?= url("/admin/do-guru.php")?>',
+                          url: '<?= url("/admin/do-siswa.php")?>',
                           type: 'POST',
                           data: { idUser: id, pass: password },
                           success: function(data, textStatus, xhr) {
@@ -292,7 +283,7 @@
                   }
               });
             });
-            $(document).on('click', '#del-guru',function (e) {   
+            $(document).on('click', '#del-siswa',function (e) {   
               var id = $(this).data('id');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
@@ -305,14 +296,14 @@
               }).then((result) => {
                 if (result.isConfirmed) {
                   $.ajax({
-                    url: '<?= url("/admin/do-guru.php")?>',
+                    url: '<?= url("/admin/do-siswa.php")?>',
                     type: 'DELETE',
                     data: JSON.stringify({ idUser: id}),
                     success: function(data, textStatus, xhr) {
                     console.log(data);
                     swal.fire({
                       title: "",
-                      text: "Guru Terhapus",
+                      text: "Siswa Terhapus",
                       icon: "success"
                     }).then((result) => {
                       if (result.isConfirmed) {
@@ -327,49 +318,7 @@
               
                 }
               });
-            });  
-            $(document).on('click', '#edit-guru',function (e) {
-              var id = $(this).data('id');
-              var nm = $(this).data('nm');
-              var mt = $(this).data('mt');
-              var kt = $(this).data('kt');
-              swal.fire({
-                  title: "Tambah Guru",
-                  html: '<br><input class="form-control" placeholder="Nama guru" value="'+nm+'" id="nm">'+
-                        '<br><input class="form-control" placeholder="Tahun Masuk" value="'+mt+'" id="mt">'+
-                        '<br><input class="form-control" placeholder="Tahun Keluar" value="'+kt+'" id="kt">',
-                  showCancelButton: true,
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
-                  buttonsStyling: true,
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      var nama_guru = $("#nm").val();
-                      var tahun_masuk = $("#mt").val();
-                      var tahun_keluar = $("#kt").val();
-                      $.ajax({
-                          url: '<?= url("/admin/do-guru.php")?>',
-                          type: 'PUT',
-                          data: JSON.stringify({ idUser: id, nmGuru: nama_guru, tahunMasuk: tahun_masuk, tahunKeluar: tahun_keluar}),
-                          success: function(data, textStatus, xhr) {
-                            console.log(data);
-                            swal.fire({
-                                title: "",
-                                text: "Success",
-                                icon: "success"
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                          },
-                          error: function(xhr, status, error) {
-                              swal.fire("", "Error: " + xhr.responseText, "error");
-                          }
-                      });
-                  }
-              });
-            });
+            });         
         };
 
         return {

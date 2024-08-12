@@ -112,8 +112,6 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nama Guru</th>
-                        <th scope="col">Tahun Masuk</th>
-                        <th scope="col">Tahun Keluar</th>
                         <th scope="col" colspan="3">Aksi</th>
                       </tr>    
                   </thead>
@@ -121,9 +119,9 @@
                   <?php
                     if(isset($_GET['nama'])){
                       $nama = $_GET['nama'];
-                      $query = $conn->query("SELECT * FROM tbguru WHERE nm_guru LIKE '%$nama%'");
+                      $query = $conn->query("SELECT * FROM guru WHERE nm_guru LIKE '%$nama%'");
                     }else{
-                      $query = $conn->query("SELECT * FROM tbguru;");
+                      $query = $conn->query("select * from guru;");
                     }
                     $i = 1;
                     while($data = $query->fetch_assoc()){
@@ -131,18 +129,13 @@
                     <tr>
                       <td><?= $i++; ?></td>
                       <td><?= $data['nm_guru']; ?></td>
-                      <td><?= $data['masuk_tahun']; ?></td>
-                      <td><?= $data['keluar_tahun']; ?></td>
                       <td> 
                         <button
                         type="button"
                         class="btn btn-warning"
                         id="edit-guru"
                         data-id="<?= $data['id_user']; ?>"
-                        data-nm="<?= $data['nm_guru']; ?>"
-                        data-mt="<?= $data['masuk_tahun']; ?>"
-                        data-kt="<?= $data['keluar_tahun']; ?>">
-
+                        data-nm="<?= $data['nm_guru']; ?>">
                           Edit
                         </button>
                       </td>
@@ -217,8 +210,7 @@
               swal.fire({
                   title: "Tambah Guru",
                   html: '<br><input class="form-control" placeholder="NIP" id="nip">'+
-                        '<br><input class="form-control" placeholder="Nama Guru" id="nm_guru">'+
-                        '<br><input class="form-control" placeholder="Tahun Masuk" id="th_masuk">'+
+                        '<br><input class="form-control" placeholder="Nama guru" id="nm_guru">'+
                         '<br><input class="form-control" placeholder="Username" id="user">'+
                         '<br><input class="form-control" placeholder="Password" id="pass">',
                   showCancelButton: true,
@@ -229,13 +221,12 @@
                   if (result.isConfirmed) {
                       var nip = $("#nip").val();
                       var nm_guru = $("#nm_guru").val();
-                      var th_masuk = $("#th_masuk").val();
                       var user = $("#user").val();
                       var pass = $("#pass").val();
                       $.ajax({
                           url: '<?= url("/admin/do-guru.php")?>',
                           type: 'POST',
-                          data: { idUser: nip, nmGuru: nm_guru, thMasuk: th_masuk, username: user, password: pass },
+                          data: { idUser: nip, nmGuru: nm_guru, username: user, password: pass },
                           success: function(data, textStatus, xhr) {
                             console.log(data);
                             swal.fire({
@@ -330,27 +321,23 @@
             });  
             $(document).on('click', '#edit-guru',function (e) {
               var id = $(this).data('id');
-              var nm = $(this).data('nm');
-              var mt = $(this).data('mt');
-              var kt = $(this).data('kt');
               swal.fire({
                   title: "Tambah Guru",
-                  html: '<br><input class="form-control" placeholder="Nama guru" value="'+nm+'" id="nm">'+
-                        '<br><input class="form-control" placeholder="Tahun Masuk" value="'+mt+'" id="mt">'+
-                        '<br><input class="form-control" placeholder="Tahun Keluar" value="'+kt+'" id="kt">',
+                  html: '<br><input class="form-control" placeholder="Nama guru" id="nm_guru">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
                   cancelButtonClass: 'btn btn-danger',
                   buttonsStyling: true,
               }).then((result) => {
                   if (result.isConfirmed) {
-                      var nama_guru = $("#nm").val();
-                      var tahun_masuk = $("#mt").val();
-                      var tahun_keluar = $("#kt").val();
+                      var nip = $("#nm_guru").val();
+                      var nm_guru = $("#nm_guru").val();
+                      var user = $("#user").val();
+                      var pass = $("#pass").val();
                       $.ajax({
                           url: '<?= url("/admin/do-guru.php")?>',
                           type: 'PUT',
-                          data: JSON.stringify({ idUser: id, nmGuru: nama_guru, tahunMasuk: tahun_masuk, tahunKeluar: tahun_keluar}),
+                          data: SON.stringify({ idUser: id, nmGuru: nm_guru }),
                           success: function(data, textStatus, xhr) {
                             console.log(data);
                             swal.fire({

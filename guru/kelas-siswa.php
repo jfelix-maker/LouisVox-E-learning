@@ -12,8 +12,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $conn->query("INSERT INTO tbuser (uid, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','3')");
-    $conn->query("INSERT INTO tbsiswa (`id_user`, `id_kelas`, `nm_siswa`, `masuk_tahun`, tahun_ajaran) VALUES ('$id_user','$id_kelas',' $nm_siswa','$tahun_masuk', '0')");
+    $conn->query("INSERT INTO `user`(`id_user`, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','3')");
+    $conn->query("INSERT INTO `siswa`(`id_user`, `id_kelas`, `nm_siswa`, `masuk_tahun`, tahun_ajaran) VALUES ('$id_user','$id_kelas',' $nm_siswa','$tahun_masuk', '0')");
     http_response_code(200);
     $response = "Berhasil menambah siswa";
   }
@@ -22,12 +22,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   $_PUT = json_decode(file_get_contents('php://input'), true);
   $tahun_ajaran = $_PUT['tahunAjaran'];
   $id_kelas = $_PUT['idKelas'];
-  $cek = $conn->query("SELECT tahun_ajaran FROM tbsiswa WHERE id_kelas = '$id_kelas' GROUP BY tahun_ajaran");
+  $cek = $conn->query("SELECT tahun_ajaran FROM `siswa` WHERE id_kelas = '$id_kelas' GROUP BY tahun_ajaran");
   if($cek->num_rows == 0){
     $response = "Minimal Terdapat 1 Siswa";
     http_response_code(400);
   }else{
-    $conn->query("UPDATE tbsiswa SET `tahun_ajaran`='$tahun_ajaran' WHERE id_kelas = '$id_kelas'");
+    $conn->query("UPDATE `siswa` SET `tahun_ajaran`='$tahun_ajaran' WHERE id_kelas = '$id_kelas'");
     $response = json_encode([
       'message' => "succes update siswa",
     ]);

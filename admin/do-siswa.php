@@ -4,7 +4,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   if(isset($_POST['pass']) && $_POST['pass'] != ""){
     $password = $_POST['pass'];
     $id = $_POST['idUser'];
-    $conn->query("UPDATE `user` SET `password`='$password' WHERE id_user = '$id'");
+    $conn->query("UPDATE tbuser SET `password`='$password' WHERE uid = '$id'");
     $response = "Berhasil Reset Password Siswa";
     http_response_code(200);
   }else{
@@ -22,7 +22,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $masuk_tahun = $_PUT["masukTahun"];
     $tahun_lulus = $_PUT["tahunLulus"];
     $nm_siswa = $_PUT["nmSiswa"];
-    $conn->query("UPDATE `siswa` SET `nm_siswa`='$nm_siswa',`masuk_tahun`=$masuk_tahun,`lulus_tahun`=$tahun_lulus WHERE id_user = $id");
+    $conn->query("UPDATE tbsiswa SET `nm_siswa`='$nm_siswa',`masuk_tahun`=$masuk_tahun,`lulus_tahun`=$tahun_lulus WHERE id_user = $id");
     $response = json_encode([
       'message' => "succes update siswa",
     ]);
@@ -35,8 +35,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   $response = [
     'message' => "succes delete kelas",
   ];
-  $conn->query("DELETE FROM user WHERE id_user = $id;");
-  $conn->query("DELETE FROM siswa WHERE id_user = $id;");
+  $conn->query("DELETE FROM tbuser WHERE uid = $id;");
+  $conn->query("DELETE FROM tbsiswa WHERE id_user = $id;");
 
   http_response_code(200);
   echo json_encode($response);

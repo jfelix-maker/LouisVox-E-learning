@@ -48,7 +48,7 @@
     $id = 0;
     if(isset($_GET['id'])){
       $id = $_GET['id'];
-      $kelas = $conn->query("SELECT * FROM tbkelas WHERE id_kelas = '$id'");
+      $kelas = $conn->query("SELECT * FROM kelas WHERE id_kelas = '$id'");
       $kelas = $kelas->fetch_assoc();
     }
     ?>
@@ -107,7 +107,7 @@
               ?>
               <div class="card">
                 <div class="card-header card-head-row">
-                  <div class="card-title">Data <?= $kelas['nm_kelas']; ?></div>
+                  <div class="card-title">Data<?= $kelas['nm_kelas']; ?></div>
                   <div class="card-tools">
                         <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                           <li class="nav-item submenu">
@@ -115,7 +115,7 @@
                           </li>
                           <li class="nav-item" role="presentation">
                             <?php
-                            $qu_th = $conn->query("SELECT tahun_ajaran FROM tbsiswa WHERE id_kelas = '$id' GROUP BY tahun_ajaran;");
+                            $qu_th = $conn->query("SELECT tahun_ajaran FROM `siswa` WHERE id_kelas = $id GROUP BY tahun_ajaran;");
                             $d_th = $qu_th->fetch_assoc();
                             ?>
                             <select class="form-select" id="tahun-ajar">
@@ -152,12 +152,11 @@
                         <th scope="col">#</th>
                         <th scope="col">Nama Siswa</th>
                         <th scope="col">Tahun Masuk</th>
-                        <th scope="col">Tahun Lulus</th>
                       </tr>    
                   </thead>
                   <tbody>
                   <?php
-                    $query = $conn->query("SELECT * FROM tbsiswa s, tbuser u WHERE u.uid = s.id_user AND s.id_kelas = '$id'");
+                    $query = $conn->query("select * from siswa s, user u WHERE u.id_user = s.id_user AND s.id_kelas = $id");
                     $i = 1;
                     while($data = $query->fetch_assoc()){
                   ?>
@@ -165,7 +164,6 @@
                       <td><?= $i++; ?></td>
                       <td><?= $data['nm_siswa']; ?></td>
                       <td><?= $data['masuk_tahun']; ?></td>
-                      <td><?= $data['lulus_tahun']; ?></td>
                     </tr>
                   <?php
                     }
@@ -199,7 +197,7 @@
                   </thead>
                   <tbody>
                   <?php
-                    $query = $conn->query("SELECT *, (SELECT COUNT(*)FROM tbsiswa s WHERE s.id_kelas = k.id_kelas) as jml_siswa from tbkelas k;");
+                    $query = $conn->query("select *, (SELECT COUNT(*)FROM siswa s WHERE s.id_kelas = k.id_kelas) as jml_siswa from kelas k;");
                     $i = 1;
                     while($data = $query->fetch_assoc()){
                   ?>

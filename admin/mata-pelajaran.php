@@ -45,6 +45,9 @@
     <!-- read config -->
     <?php
     require '../config.php';
+    if(!isset($_GET['ta'])){
+      header('Location: '.url("/admin/mata-pelajaran.php?ta=0"));
+    }
     ?>
     <div class="wrapper">
       <!-- menu -->
@@ -65,7 +68,7 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div class="page-header">
-                <h3 class="fw-bold mb-3">Guru</h3>
+                <h3 class="fw-bold mb-3">Mata Pelajaran</h3>
                 <ul class="breadcrumbs mb-3">
                   <li class="nav-home">
                     <a href="<?= url("/admin"); ?>">
@@ -76,7 +79,7 @@
                     <i class="icon-arrow-right"></i>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= url("/admin/guru.php"); ?>">Guru</a>
+                    <a href="<?= url("/admin/mata-pelajaran.php"); ?>">Mata Pelajaran</a>
                   </li>
                 </ul>
               </div>
@@ -86,20 +89,25 @@
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Data Guru</div>
+                  <div class="card-title">Data Mata Pelajaran</div>
                 </div>
                 <div class="card-body">
                   <div class="col-md-12">
-                    <form class="input-group " method="GET" action="<?= url("/admin/guru.php");?>">
+                    <form class="input-group " method="GET" action="<?= url("/admin/mata-pelajaran.php?th=".$_GET['ta']);?>">
                       <button
                       type="button"
                       class="btn btn-primary"
                       id="form-guru">
-                        Tambah Guru
+                        Tambah Mata Pelajaran
                       </button>
                       &nbsp;&nbsp;&nbsp;
+                      <select class="form-select" id="tahun-ajar">
+                        <option value="0">Semua</option>
+                        <option value="2020.2">2020 Genap</option>
+                      </select>
+                      &nbsp;&nbsp;&nbsp;
                       <div class="input-group-prepend">
-                        <input type="text" name="nama" placeholder="Cari Guru ..." class="form-control">
+                        <input type="text" name="pelajaran" placeholder="Cari Mata Pelajaran ..." class="form-control">
                       </div>
                       <button type="submit" class="btn btn-search pe-0 ">
                           <i class="fa fa-search search-icon"></i>
@@ -114,7 +122,7 @@
                         <th scope="col">Nama Guru</th>
                         <th scope="col">Tahun Masuk</th>
                         <th scope="col">Tahun Keluar</th>
-                        <th scope="col" colspan="3">Aksi</th>
+                        <th scope="col" colspan="2">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
@@ -144,15 +152,6 @@
                         data-kt="<?= $data['keluar_tahun']; ?>">
 
                           Edit
-                        </button>
-                      </td>
-                      <td> 
-                        <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="reset-guru"
-                        data-id="<?= $data['id_user']; ?>">
-                          Reset Password
                         </button>
                       </td>
                       <td> 
@@ -207,7 +206,6 @@
     <!-- Sweet Alert -->
     <script src="../assets/js/plugin/sweetalert/sweetalert2-11.js"></script>
 
-    <!-- Kaiadmin JS -->
     <script src="../assets/js/main.min.js"></script>
 
     <script>
@@ -255,43 +253,7 @@
                   }
               });
             });
-            $(document).on('click', '#reset-guru',function (e) {   
-              var id = $(this).data('id');
-              console.log("RESET");
-              swal.fire({
-                  title: "Reset Password Siswa",
-                  html: '<br><input class="form-control" placeholder="Password Baru" id="pass">',
-                  showCancelButton: true,
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
-                  buttonsStyling: true,
-              }).then((result) => {
-                  if (result.isConfirmed) {
-                      var password = $("#pass").val();
-                      $.ajax({
-                          url: '<?= url("/admin/do-guru.php")?>',
-                          type: 'POST',
-                          data: { idUser: id, pass: password },
-                          success: function(data, textStatus, xhr) {
-                            swal.fire({
-                                title: "",
-                                text: "Success",
-                                icon: "success"
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    location.reload();
-                                }
-                            });
-                          },
-                          error: function(xhr, status, error) {
-                              swal.fire("", "Error: " + xhr.responseText, "error");
-                          }
-                      });
-                  } else {
-                      swal.fire("", "Cancelled", "error");
-                  }
-              });
-            });
+            
             $(document).on('click', '#del-guru',function (e) {   
               var id = $(this).data('id');
               Swal.fire({
