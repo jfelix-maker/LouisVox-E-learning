@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user']) || $_SESSION['level'] != 2) {
+    header("Location: ../index.php");
+    exit;
+}
+$id_guru = $_SESSION['uid'];
+?>
 <!-- Sidebar -->
 <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">
@@ -29,7 +38,7 @@
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item <?= ($menu == "index") ? "active" : ""; ?>">
-                <a href="<?= url("/admin"); ?>">
+                <a href="<?= url("/guru/"); ?>">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -41,38 +50,29 @@
                 <h4 class="text-section">Menu Utama</h4>
               </li>
               <li class="nav-item <?= ($menu == "kelas") ? "active" : ""; ?>">
-                <a href="<?= url("/admin/kelas.php"); ?>">
+                <a data-bs-toggle="collapse" href="#kelas">
                   <i class="fas fa-users"></i>
                   <p>Kelas</p>
-                </a>
-              </li>
-              <li class="nav-item <?= ($menu == "guru") ? "active" : ""; ?>">
-                <a data-bs-toggle="collapse" href="#guru">
-                  <i class="fas fa-user-tie"></i>
-                  <p>Guru</p>
                   <span class="caret"></span>
                 </a>
-                <div class="collapse" id="guru">
+                <div class="collapse" id="kelas">
                   <ul class="nav nav-collapse">
+                    <?php
+                    $id_guru = $_SESSION['uid'];
+                    $qgk = $conn->query("SELECT * FROM tbmapeldtl tmd, tbkelas tk WHERE tmd.id_guru = '$id_guru' AND tk.id_kelas = tmd.id_kelas");
+                    while($dgk = $qgk->fetch_assoc()){
+                    ?>
                     <li>
-                      <a href="<?= url("/admin/guru.php"); ?>">
-                        <span class="sub-item">Data Guru</span>
+                      <a href="<?= url("/guru/kelas.php?kl=".$dgk['id_kelas']); ?>">
+                        <span class="sub-item"><?= $dgk['nm_kelas']; ?></span>
                       </a>
                     </li>
-                    <li>
-                      <a href="#">
-                        <span class="sub-item">Data Mata Pelajaran</span>
-                      </a>
-                    </li>
+                    <?php
+                    }
+                    ?>
                   </ul>
                 </div>
-              </li>
-              <li class="nav-item <?= ($menu == "siswa") ? "active" : ""; ?>">
-                <a href="<?= url("/admin/siswa.php"); ?>">
-                  <i class="fas fa-user-graduate"></i>
-                  <p>Siswa</p>
-                </a>
-              </li>              
+              </li>            
             </ul>
           </div>
         </div>

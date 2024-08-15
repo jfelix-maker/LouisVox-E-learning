@@ -6,6 +6,7 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="../assets/img/sekolah/favicon.ico" type="image/x-icon" />
 
+    <!-- Fonts and icons -->
     <script src="../assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
       WebFont.load({
@@ -29,39 +30,74 @@
     <link rel="stylesheet" href="../assets/css/plugins.min.css" />
     <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="../assets/css/demo.css" />
-    
+
+    <style>
+      .material-section {
+        margin-bottom: 30px;
+      }
+
+      .material-section h4 {
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
+
+      .material-list {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .material-list li {
+        margin-bottom: 10px;
+      }
+
+      .material-list a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      .material-list a:hover {
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
     <?php require '../config.php'; ?>
     <div class="wrapper">
-       <?php
+      <?php
         $menu = "index";
         require 'menu.php';
-       ?>
+      ?>
 
-       redesian ini aja nggak usah yang lain
-        <div class="main-panel">
-            <?php require 'header.php'; ?>
-            <div class="container">
-                <div class="page-inner d-flex align-items-center justify-content-center" style="min-height: 100vh;"> 
-                    <div class="card w-100" style="max-width: 600px; margin-left: 20px; margin-right: 20px;">
-                        <div class="card-body text-center">
-                            <h4 class="fw-bold mb-3">Selamat Datang di Kuis</h4>
-                            <p>
-                            </p>
-                            <ul class="text-start">
-                                <li>Setiap soal memiliki waktu tertentu untuk dijawab.</li>
-                                <li>Pastikan Anda menjawab semua soal dengan benar.</li>
-                                <li>Anda tidak bisa kembali ke soal sebelumnya setelah melanjutkan.</li>
-                            </ul>
-                            <form action="kuisdtl.php" method="post">
-                                <button type="submit" class="btn btn-primary">Mulai Kuis</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+      <div class="main-panel">
+        <?php require 'header.php'; ?>
+        <div class="container">
+          <div class="page-inner">
+            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+              <div class="page-header">
+                <h3 class="fw-bold mb-3">Materi</h3>
+              </div>
             </div>
+
+            <div class="material-section">
+              <h4>Pertemuan Pertama</h4>
+              <ul class="material-list">
+                <li><a href="path/to/materi1.pdf" target="_blank">Materi 1: Pengenalan Matematika</a></li>
+                <li><a href="path/to/materi2.pdf" target="_blank">Materi 2: Pengertian Matematika</a></li>
+              </ul>
+            </div>
+
+            <div class="material-section">
+              <h4>Pertemuan Kedua</h4>
+              <ul class="material-list">
+                <li><a href="path/to/materi3.pdf" target="_blank">Materi 3: Penjabaran Matematika</a></li>
+                <li><a href="path/to/materi4.pdf" target="_blank">Materi 4: Tugas Matematika</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
     <script src="../assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="../assets/js/core/popper.min.js"></script>
@@ -76,6 +112,5 @@
     <script src="../assets/js/plugin/jsvectormap/world.js"></script>
     <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
     <script src="../assets/js/main.min.js"></script>
-
   </body>
 </html>

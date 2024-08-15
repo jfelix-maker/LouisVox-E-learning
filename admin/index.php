@@ -1,12 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['user']) || $_SESSION['level'] != 1) {
-    header("Location: ../index.php");
-    exit;
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>

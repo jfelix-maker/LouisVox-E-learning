@@ -45,9 +45,11 @@
     <!-- read config -->
     <?php
     require '../config.php';
-    if(!isset($_GET['ta']) && !isset($_GET['id'])){
+    if(!isset($_GET['id'])){
       header('Location: '.url("/admin/mata-pelajaran.php?ta=0"));
     }
+    $id = $_GET['id'];
+    $dm = ($conn->query("SELECT * FROM tbmapel WHERE id_mapel = '$id'"))->fetch_assoc();
     ?>
     <div class="wrapper">
       <!-- menu -->
@@ -68,7 +70,7 @@
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div class="page-header">
-                <h3 class="fw-bold mb-3">Mata Pelajaran</h3>
+                <h3 class="fw-bold mb-3">Penugasan Guru</h3>
                 <ul class="breadcrumbs mb-3">
                   <li class="nav-home">
                     <a href="<?= url("/admin"); ?>">
@@ -79,7 +81,13 @@
                     <i class="icon-arrow-right"></i>
                   </li>
                   <li class="nav-item">
-                    <a href="<?= url("/admin/mata-pelajaran.php"); ?>">Mata Pelajaran</a>
+                    <?= tahun_ajar($dm['tahun_ajaran']); ?>
+                  </li>
+                  <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                  </li>
+                  <li class="nav-item">
+                  <?= $dm['nm_mapel']; ?>
                   </li>
                 </ul>
               </div>
@@ -91,14 +99,14 @@
                     <div class="card-header">
                       <div class="card-head-row card-tools-still-right">
                         <?php
-                          if(!isset($_GET['id'])){
+                          if(!isset($_GET['dtl'])){
                         ?>
-                        <h4 class="card-title">Form Tambah Mata Pelajaran</h4>
+                        <h4 class="card-title">Form Penugasan Guru</h4>
                         <?php
                           }else{
                         ?>
                         <h4 class="card-tools">
-                          Form Edit Mata Pelajaran
+                          Form Edit Penugasan Guru
                         </h4>
                         <?php
                           }
@@ -109,18 +117,29 @@
                       <div class="row">
                         <div class="col-md-6">
                         <?php
-                          if(!isset($_GET['id'])){
+                          if(!isset($_GET['dtl'])){
+                            $ta = $dm['tahun_ajaran'];
                         ?>
-                          <form action="do-mata-pelajaran.php" method="POST" class="form-group" >
-                            <label>Nama Mata Pelajaran</label>
-                            <input type="text" class="form-control" name="mapel" placeholder="Nama Mata Pelajaran">
-                            <label>Tahun Ajaran</label>
-                            <select class="form-select" name="tahun_ajar">
+                          <form action="do-mapel-guru.php" method="POST" class="form-group" >
+                            <input type="hidden" name="id_mapel" value="<?= $_GET['id']; ?>">
+                            <label>Nama Guru</label>
+                            <select class="form-select" name="id_guru">
                               <?php
-                              for($tahun = $env['TAHUN']; $tahun < date("Y")+5; $tahun++){
+                              $qdg = $conn->query("SELECT * FROM tbguru;");
+                              while($dg = $qdg->fetch_assoc()){
                               ?>
-                              <option value="<?= $tahun; ?>.1"><?= $tahun; ?> Ganjil</option>
-                              <option value="<?= $tahun; ?>.2"><?= $tahun; ?> Genap</option>
+                              <option value="<?= $dg['id_user']; ?>"><?= $dg['nm_guru']; ?></option>
+                              <?php
+                                }
+                              ?>
+                            </select>
+                            <label>Kelas</label>
+                            <select class="form-select" name="id_kelas">
+                              <?php
+                              $qdk = $conn->query("SELECT * FROM tbkelas tbk, tbsiswa tbs WHERE tbk.id_kelas = tbs.id_kelas AND tbs.tahun_ajaran = '$ta' GROUP BY tbk.nm_kelas;");
+                              while($dk = $qdk->fetch_assoc()){
+                              ?>
+                              <option value="<?= $dk['id_kelas']; ?>"><?= $dk['nm_kelas']; ?></option>
                               <?php
                                 }
                               ?>
@@ -134,21 +153,33 @@
                         </div>
                         <div class="col-md-6">
                           <?php
-                          if(isset($_GET['id'])){
+                          if(isset($_GET['dtl'])){
                             $id = $_GET['id'];
-                            $raw = ($conn->query("SELECT * FROM tbmapel WHERE id_mapel = '$id'"))->fetch_assoc();
+                            $dtl = $_GET['dtl'];
+                            $ta = $dm['tahun_ajaran'];
+                            $raw = ($conn->query("SELECT * FROM tbmapeldtl tmd, tbkelas tk, tbguru tg WHERE tg.id_user = tmd.id_guru AND tk.id_kelas = tmd.id_kelas AND tmd.id_mapel_dtl = '$dtl'"))->fetch_assoc();
                           ?>
-                          <form action="do-mata-pelajaran.php" method="POST" class="form-group" >
-                            <input type="hidden" name="PUT" value="<?= $id; ?>"/>
-                            <label>Nama Mata Pelajaran</label>
-                            <input type="text" class="form-control" name="mapel" value="<?= $raw['nm_mapel']; ?>" placeholder="Nama Mata Pelajaran">
-                            <label>Tahun Ajaran</label>
-                            <select class="form-select" name="tahun_ajar" >
+                          <form action="do-mapel-guru.php" method="POST" class="form-group" >
+                            <input type="hidden" name="PUT" value="<?= $dtl; ?>"/>
+                            <input type="hidden" name="id_mapel" value="<?= $id; ?>">
+                            <label>Nama Guru</label>
+                            <select class="form-select" name="id_guru">
                               <?php
-                              for($tahun = $env['TAHUN']; $tahun < date("Y")+5; $tahun++){
+                              $qdg = $conn->query("SELECT * FROM tbguru;");
+                              while($dg = $qdg->fetch_assoc()){
                               ?>
-                              <option value="<?= $tahun; ?>.1" <?= ($raw['tahun_ajaran'] == $tahun) ? 'selected' : ''; ?>><?= $tahun; ?> Ganjil</option>
-                              <option value="<?= $tahun; ?>.2" <?= ($raw['tahun_ajaran'] == $tahun) ? 'selected' : ''; ?>><?= $tahun; ?> Genap</option>
+                              <option value="<?= $dg['id_user']; ?>" <?= ($dg['id_user'] == $raw['id_guru']) ? 'selected' : ''; ?>><?= $dg['nm_guru']; ?></option>
+                              <?php
+                                }
+                              ?>
+                            </select>
+                            <label>Kelas</label>
+                            <select class="form-select" name="id_kelas">
+                              <?php
+                              $qdk = $conn->query("SELECT * FROM tbkelas tbk, tbsiswa tbs WHERE tbk.id_kelas = tbs.id_kelas AND tbs.tahun_ajaran = '$ta' GROUP BY tbk.nm_kelas;");
+                              while($dk = $qdk->fetch_assoc()){
+                              ?>
+                              <option value="<?= $dk['id_kelas']; ?>" <?= ($dk['id_kelas'] == $raw['id_kelas']) ? 'selected' : ''; ?>><?= $dk['nm_kelas']; ?></option>
                               <?php
                                 }
                               ?>
@@ -164,75 +195,43 @@
                     </div>
             </div>
             <?php
-              if(!isset($_GET['id'])){
-                $ta = $_GET['ta'];
+              if(!isset($_GET['dtl'])){
+                $id = $_GET['id'];
             ?>
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header">
-                  <div class="card-title">Data Mata Pelajaran</div>
+                  <div class="card-title">Data Penugasan Guru</div>
                 </div>
                 <div class="card-body">
                   <div class="col-md-12">
-                    <form class="input-group " method="GET" action="<?= url("/admin/mata-pelajaran.php");?>">
-                      <select class="form-select" name="ta">
-                        <option value="0" <?= ($ta == 0) ? 'selected' : ''; ?>>Semua</option>
-                        <?php
-                          for($tahun = $env['TAHUN']; $tahun < date("Y")+5; $tahun++){
-                        ?>
-                          <option value="<?= $tahun; ?>.1" <?= ($ta == $tahun) ? 'selected' : ''; ?>><?= $tahun; ?> Ganjil</option>
-                          <option value="<?= $tahun; ?>.2"><?= ($ta == $tahun) ? 'selected' : ''; ?><?= $tahun; ?> Genap</option>
-                        <?php
-                          }
-                        ?>
-                      </select>
-                      &nbsp;&nbsp;&nbsp;
-                      <div class="input-group-prepend">
-                        <input type="text" name="mapel" placeholder="Cari Mata Pelajaran ..." class="form-control">
-                      </div>
-                      <button type="submit" class="btn btn-search pe-0" name="cari">
-                          <i class="fa fa-search search-icon"></i>
-                      </button>                    
-                    </form>
-                  
                   </div>
                 <table class="table table-hover">
                   <thead> 
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Nama Mata Pelajaran</th>
-                        <th scope="col">Tahun Ajar</th>
-                        <th scope="col" colspan="3">Aksi</th>
+                        <th scope="col">Nama Guru</th>
+                        <th scope="col">Kelas</th>
+                        <th scope="col" colspan="2">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
                   <?php
-                    if(isset($_GET['cari'])){
-                      $nama = $_GET['mapel'];
-                      $th_ajar = $_GET['ta'];
-                      if($ta == 0){
-                        $query = $conn->query("SELECT * FROM tbmapel WHERE nm_mapel LIKE '%$nama%'");
-                      }else{
-                        $query = $conn->query("SELECT * FROM tbmapel WHERE nm_mapel LIKE '%$nama%' AND tahun_ajaran = '$ta'");
-                      }
-                    }else{
-                      $query = $conn->query("SELECT * FROM tbmapel;");
-                    }
+                    $query = $conn->query("SELECT nm_guru, nm_kelas, id_mapel_dtl FROM tbmapeldtl tbmd, tbguru tbg, tbmapel tbm, tbkelas tbk WHERE tbg.id_user = tbmd.id_guru AND tbm.id_mapel = tbmd.id_mapel AND tbk.id_kelas = tbmd.id_kelas AND  tbm.id_mapel = '$id'");
                     $i = 1;
                     while($data = $query->fetch_assoc()){
                   ?>
                     <tr>
                       <td><?= $i++; ?></td>
-                      <td><?= $data['nm_mapel']; ?></td>
-                      <td><?= tahun_ajar($data['tahun_ajaran']); ?></td>
-                      <td><a href="<?= url("/admin/mata-pelajaran-guru.php?id=".$data['id_mapel']); ?>" class="btn btn-primary">Lihat</a></td>
-                      <td><a href="<?= url("/admin/mata-pelajaran.php?id=".$data['id_mapel']); ?>" class="btn btn-warning">Edit</a></td>
+                      <td><?= $data['nm_guru']; ?></td>
+                      <td><?= $data['nm_kelas']; ?></td>
+                      <td><a href="<?= url("/admin/mata-pelajaran-guru.php?id=".$id."&dtl=".$data['id_mapel_dtl']); ?>" class="btn btn-warning">Edit</a></td>
                       <td> 
                         <button
                         type="button"
                         class="btn btn-danger"
                         id="del-mapel"
-                        data-id="<?= $data['id_mapel']; ?>">
+                        data-id="<?= $data['id_mapel_dtl']; ?>">
                           Delete
                         </button>
                       </td>

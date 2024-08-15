@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user']) || $_SESSION['level'] != 1) {
+    header("Location: ../index.php");
+    exit;
+}
+?>
 <!-- Sidebar -->
 <div class="sidebar" data-background-color="dark">
         <div class="sidebar-logo">

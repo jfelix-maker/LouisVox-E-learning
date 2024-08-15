@@ -29,7 +29,6 @@
     <link rel="stylesheet" href="../assets/css/plugins.min.css" />
     <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="../assets/css/demo.css" />
-    
   </head>
   <body>
     <?php require '../config.php'; ?>
@@ -38,25 +37,25 @@
         $menu = "index";
         require 'menu.php';
        ?>
-
-       redesian ini aja nggak usah yang lain
+       
         <div class="main-panel">
             <?php require 'header.php'; ?>
             <div class="container">
                 <div class="page-inner d-flex align-items-center justify-content-center" style="min-height: 100vh;"> 
                     <div class="card w-100" style="max-width: 600px; margin-left: 20px; margin-right: 20px;">
                         <div class="card-body text-center">
-                            <h4 class="fw-bold mb-3">Selamat Datang di Kuis</h4>
-                            <p>
+                            <h4 class="fw-bold mb-3">Kuis Selesai</h4>
+                            <p class="mb-4">
+                                Terima kasih telah menyelesaikan kuis! Berikut hasil Anda:
                             </p>
-                            <ul class="text-start">
-                                <li>Setiap soal memiliki waktu tertentu untuk dijawab.</li>
-                                <li>Pastikan Anda menjawab semua soal dengan benar.</li>
-                                <li>Anda tidak bisa kembali ke soal sebelumnya setelah melanjutkan.</li>
-                            </ul>
-                            <form action="kuisdtl.php" method="post">
-                                <button type="submit" class="btn btn-primary">Mulai Kuis</button>
-                            </form>
+                            <div class="alert alert-success" role="alert">
+                                Skor Anda: <strong>85/100</strong>
+                            </div>
+                            <p class="mb-4">
+                                Anda telah menyelesaikan kuis ini dengan baik. 
+                            </p>
+                            <a href="index.php" class="btn btn-secondary">Kembali ke Halaman Utama</a>
+                            <a href="skor.php" class="btn btn-primary">Lihat Detail Skor</a>
                         </div>
                     </div>
                 </div>

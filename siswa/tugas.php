@@ -31,47 +31,83 @@
     <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="../assets/css/demo.css" />
 
-      <style>
-    .card-body {
-        min-height: 200px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+    <style>
+      .material-section {
+        margin-bottom: 30px;
+      }
 
-    .card {
-        height: 100%; 
-    }
+      .material-section h4 {
+        border-bottom: 2px solid #007bff;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: bold;
+      }
 
-    .card-img-top {
-        height: 150px; 
-        object-fit: cover;
-    }
+      .material-list {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .material-list li {
+        margin-bottom: 10px;
+      }
+
+      .material-list a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      .material-list a:hover {
+        text-decoration: underline;
+      }
     </style>
-
-
   </head>
   <body>
     <?php require '../config.php'; ?>
     <div class="wrapper">
-       <?php
+      <?php
         $menu = "index";
         require 'menu.php';
-       ?>
+      ?>
 
       <div class="main-panel">
-         <?php require 'header.php'; ?>
+        <?php require 'header.php'; ?>
         <div class="container">
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-                <div class="page-header">
-                    <h3 class="fw-bold mb-3">Tugas</h3>
-                </div>
-                <div class="ms-md-auto py-2 py-md-0">
-                </div>
+              <div class="page-header">
+                <h3 class="fw-bold mb-3">Tugas</h3>
+              </div>
             </div>
-            <div class="row">
 
+            <div class="material-section">
+              <h4>Tugas 1</h4>
+              <ul class="material-list">
+                <li><a href="path/to/materi1.pdf" target="_blank">Materi 1: Pengenalan Matematika</a></li>
+              </ul>
+              <h5>Unggah Tugas Anda</h5>
+              <form action="upload.php" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="file">Pilih file untuk diunggah:</label>
+                  <input type="file" name="file" id="file" class="form-control">
+                </div>
+                <button type="submit" name="submit" class="btn btn-primary mt-3">Unggah Tugas</button>
+              </form>
+            </div>
+
+            <div class="material-section">
+              <h4>Tugas 2</h4>
+              <ul class="material-list">
+                <li><a href="path/to/materi2.pdf" target="_blank">Materi 2: Pengertian Matematika</a></li>
+              </ul>
+              <h5>Unggah Tugas Anda</h5>
+              <form action="upload.php" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="file">Pilih file untuk diunggah:</label>
+                  <input type="file" name="file" id="file" class="form-control">
+                </div>
+                <button type="submit" name="submit" class="btn btn-primary mt-3">Unggah Tugas</button>
+              </form>
             </div>
           </div>
         </div>

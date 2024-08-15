@@ -76,7 +76,7 @@ $conn->close();
                   foreach ($mapelArray as $mapel): 
               ?>
               <li>
-                <a href="<?= url('/siswa/' . strtolower(str_replace(' ', '_', $mapel)) . '.php'); ?>">
+                <a href="<?= url('/siswa/materi.php'); ?>">
                   <span class="sub-item"><?= $mapel; ?></span>
                 </a>
               </li>
