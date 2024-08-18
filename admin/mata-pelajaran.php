@@ -288,40 +288,7 @@
     var SweetAlert2Demo = (function () {
         var initDemos = function () {
             $(document).on('click', '#del-mapel',function (e) {   
-              var id = $(this).data('id');
-              Swal.fire({
-                title: "Apakah Anda Yakin?",
-                text: "Data akan di hapus",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Hapus Sekarang!"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                  $.ajax({
-                    url: '<?= url("/admin/do-mata-pelajaran.php")?>',
-                    type: 'DELETE',
-                    data: JSON.stringify({ idMapel: id}),
-                    success: function(data, textStatus, xhr) {
-                    console.log(data);
-                    swal.fire({
-                      title: "",
-                      text: "Mata Pelajaran Terhapus",
-                      icon: "success"
-                    }).then((result) => {
-                      if (result.isConfirmed) {
-                        location.reload();
-                      }
-                    });
-                    },
-                    error: function(xhr, status, error) {
-                      swal.fire("", "Error: " + xhr.responseText, "error");
-                    }
-                  });
               
-                }
-              });
             });
         };
 

@@ -59,7 +59,7 @@ $id_guru = $_SESSION['uid'];
                   <ul class="nav nav-collapse">
                     <?php
                     $id_guru = $_SESSION['uid'];
-                    $qgk = $conn->query("SELECT * FROM tbmapeldtl tmd, tbkelas tk WHERE tmd.id_guru = '$id_guru' AND tk.id_kelas = tmd.id_kelas");
+                    $qgk = $conn->query("SELECT * FROM tbmapeldtl tmd, tbkelas tk WHERE tmd.id_guru = '$id_guru' AND tk.id_kelas = tmd.id_kelas GROUP BY tk.nm_kelas;");
                     while($dgk = $qgk->fetch_assoc()){
                     ?>
                     <li>

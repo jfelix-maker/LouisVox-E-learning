@@ -89,7 +89,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-home">
-                  Materi
+                  Tugas
                 </li>
               </ul>
             </div>
@@ -105,11 +105,11 @@
                       <?php
                         if(!isset($_GET['dtl'])){
                       ?>
-                        <h4 class="card-title">Form Materi</h4>
+                        <h4 class="card-title">Form Tugas</h4>
                       <?php
                         }else{
                       ?>
-                        <h4 class="card-tools">Form Edit Materi</h4>
+                        <h4 class="card-tools">Form Edit Tugas</h4>
                       <?php
                         }
                       ?>
@@ -121,16 +121,34 @@
                         <?php
                           if(!isset($_GET['dtl'])){
                         ?>
-                          <form action="do-materi.php" method="POST" class="form-group" enctype="multipart/form-data">
+                          <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
                             <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>
-                            <label>No Materi</label>
-                            <input type="number" class="form-control" name="no" placeholder="No Materi" required>                            
-                            <label>Judul Materi</label>
-                            <input type="text" class="form-control" name="nm_materi" placeholder="Judul Materi" required>
-                            <label>Deskripsi Materi</label>
-                            <input type="text" class="form-control" name="dtl_materi" placeholder="Deskripsi Materi" required>
+                            <label>No Tugas</label>
+                            <input type="number" class="form-control" name="no" placeholder="No Tugas" required>                            
+                            <label>Judul Tugas</label>
+                            <input type="text" class="form-control" name="nm_tugas" placeholder="Judul Tugas" required>
+                            <label>Deskripsi Tugas</label>
+                            <input type="text" class="form-control" name="dtl_tugas" placeholder="Deskripsi Tugas" required>
                             <label>PDF</label>
                             <input type="file" class="form-control" name="dok" placeholder="PDF" required>
+                            <label>Mulai</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="mulai_date" placeholder="Mulai" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="time" class="form-control" name="mulai_time" placeholder="Mulai" required>
+                                </div>
+                            </div>
+                            <label>Selesai</label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="date" class="form-control" name="selesai_date" placeholder="Mulai" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="time" class="form-control" name="selesai_time" placeholder="Mulai" required>
+                                </div>
+                            </div>
                             <br>
                             <button type="submit" class="form-control btn btn-primary"> Submit</button>
                           </form>
@@ -142,19 +160,39 @@
                           <?php
                             if(isset($_GET['dtl'])){
                               $dtl = $_GET['dtl'];
-                              $raw = ($conn->query("SELECT * FROM tbmateri tm, tbmateridtl tmd WHERE tm.id_materi = '$dtl' AND tmd.id_materi = '$dtl' LIMIT 1;"))->fetch_assoc();
+                              $raw = ($conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = '$dtl' AND ttd.id_tugas = '$dtl' LIMIT 1;"))->fetch_assoc();
+                              $m = explode(' ', $raw['mulai']);
+                              $s = explode(' ', $raw['selesai']);
                           ?>
-                            <form action="do-materi.php" method="POST" class="form-group" enctype="multipart/form-data">
+                            <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
                               <input type="hidden" name="PUT" value="<?= $dtl; ?>"/>
                               <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>
-                              <label>No Materi</label>
-                              <input type="number" class="form-control" value="<?= $raw['no']; ?>" name="no" placeholder="No Materi" required>                              
-                              <label>Judul Materi</label>
-                              <input type="text" class="form-control" value="<?= $raw['nm_materi']; ?>" name="nm_materi" placeholder="Judul Materi" required>
-                              <label>Deskripsi Materi</label>
-                              <input type="text" class="form-control" value="<?= $raw['dtl_materi']; ?>" name="dtl_materi" placeholder="Deskripsi Materi" required>
+                              <label>No Tugas</label>
+                              <input type="number" class="form-control" value="<?= $raw['no']; ?>" name="no" placeholder="No Tugas" required>                              
+                              <label>Judul Tugas</label>
+                              <input type="text" class="form-control" value="<?= $raw['nm_tugas']; ?>" name="nm_tugas" placeholder="Judul Tugas" required>
+                              <label>Deskripsi Tugas</label>
+                              <input type="text" class="form-control" value="<?= $raw['dtl_tugas']; ?>" name="dtl_tugas" placeholder="Deskripsi Tugas" required>
                               <label>PDF</label>
                               <input type="file" class="form-control" name="dok" placeholder="PDF">
+                              <label>Mulai</label>
+                              <div class="row g-3">
+                                  <div class="col-md-6">
+                                      <input type="date" class="form-control" value="<?= $m[0]; ?>" name="mulai_date" placeholder="Mulai" required>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <input type="time" class="form-control" value="<?= $m[1]; ?>" name="mulai_time" placeholder="Mulai" required>
+                                  </div>
+                              </div>
+                              <label>Selesai</label>
+                              <div class="row g-3">
+                                  <div class="col-md-6">
+                                      <input type="date" class="form-control" value="<?= $s[0]; ?>" name="selesai_date" placeholder="Mulai" required>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <input type="time" class="form-control" value="<?= $m[1]; ?>" name="selesai_time" placeholder="Mulai" required>
+                                  </div>
+                              </div>
                               <br>
                               <button type="submit" class="form-control btn btn-primary"> Submit</button>
                             </form>
@@ -170,38 +208,41 @@
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
-                    <div class="card-title">Data Materi Kelas <?= $dk['nm_kelas']; ?></div>
+                    <div class="card-title">Data Tugas Kelas <?= $dk['nm_kelas']; ?></div>
                   </div>
-                  <div class="card-body">
-                    <div class="col-md-12">
-                    </div>
+                  <div class="card-body table-responsive">
                   <table class="table table-hover">
                     <thead> 
                         <tr>
                           <th scope="col">No</th>
-                          <th scope="col">Materi</th>
+                          <th scope="col">Tugas</th>
                           <th scope="col">Deskripsi</th>
+                          <th scope="col">Mulai</th>
+                          <th scope="col">Selesai</th>
                           <th scope="col">PDF</th>
-                          <th scope="col" colspan="2">Aksi</th>
+                          <th scope="col" colspan="3">Aksi</th>
                         </tr>    
                     </thead>
                     <tbody>
                     <?php
-                      $query = $conn->query("SELECT * FROM tbmateri tm, tbmateridtl tmd WHERE tm.id_materi = tmd.id_materi AND tm.id_mapel_dtl = '$id' ORDER BY tm.no ASC");
+                      $query = $conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = ttd.id_tugas AND tt.id_mapel_dtl = '$id' ORDER BY tt.no ASC");
                       $i = 1;
                       while($data = $query->fetch_assoc()){
                     ?>
                       <tr>
                         <td><?= $data['no']; ?></td>
-                        <td><?= $data['nm_materi']; ?></td>
-                        <td><?= $data['dtl_materi']; ?></td>
+                        <td><?= $data['nm_tugas']; ?></td>
+                        <td><?= $data['dtl_tugas']; ?></td>
+                        <td><?= tanggal($data['mulai']); ?></td>
+                        <td><?= tanggal($data['selesai']); ?></td>
                         <td><a <?= ($data['dokumen'] == "")? "" : "href='".$data['dokumen']."'"; ?> target="_blank"><?= ($data['dokumen'] == "")? "Kosong" : "Ada"; ?></td>
-                        <td><a href="<?= url("/guru/materi.php?kl=".$id."&dtl=".$data['id_materi']); ?>" class="btn btn-warning"> Edit</a></td>
+                        <td><a href="<?= url("/guru/jawab-tugas.php?kl=".$data['id_tugas']); ?>" class="btn btn-primary"> Jawaban Siswa</a></td>
+                        <td><a href="<?= url("/guru/tugas.php?kl=".$id."&dtl=".$data['id_tugas']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
                         class="btn btn-danger"
-                        id="del-materi"
-                        data-id="<?= $data['id_materi']; ?>">
+                        id="del-tugas"
+                        data-id="<?= $data['id_tugas']; ?>">
                           Delete
                         </button></td>
                       </tr>
@@ -254,7 +295,7 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {
-            $(document).on('click', '#del-materi',function (e) {   
+            $(document).on('click', '#del-tugas',function (e) {   
               var id = $(this).data('id');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
@@ -267,14 +308,14 @@
               }).then((result) => {
                 if (result.isConfirmed) {
                   $.ajax({
-                    url: '<?= url("/guru/do-materi.php")?>',
+                    url: '<?= url("/guru/tugas.php")?>',
                     type: 'DELETE',
-                    data: JSON.stringify({ idMateri: id}),
+                    data: JSON.stringify({ idTugas: id}),
                     success: function(data, textStatus, xhr) {
                     console.log(data);
                     swal.fire({
                       title: "",
-                      text: "Materi Terhapus",
+                      text: "Tugas Terhapus",
                       icon: "success"
                     }).then((result) => {
                       if (result.isConfirmed) {

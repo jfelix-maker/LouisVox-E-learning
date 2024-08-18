@@ -98,9 +98,12 @@
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
+                        <?php
+                        $kel = ($conn->query("SELECT * FROM tbkelas"))->num_rows;
+                        ?>
                         <div class="numbers">
                           <p class="card-category">Kelas</p>
-                          <h4 class="card-title">1,294</h4>
+                          <h4 class="card-title"><?= $kel; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -119,9 +122,12 @@
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
+                      <?php
+                        $sis = ($conn->query("SELECT * FROM tbsiswa"))->num_rows;
+                      ?>
                         <div class="numbers">
                           <p class="card-category">Siswa</p>
-                          <h4 class="card-title">$ 1,345</h4>
+                          <h4 class="card-title"><?= $sis; ?></h4>
                         </div>
                       </div>
                     </div>

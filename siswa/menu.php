@@ -5,23 +5,22 @@ if (!isset($_SESSION['user']) || $_SESSION['level'] != 3) {
     exit;
 }
 $username = $_SESSION['user'];
+$id_siswa = $_SESSION['uid'];
+
 
 require_once "../config.php";
-$sql = "SELECT tmapel.nm_mapel 
-        FROM tbsiswa tsiswa 
-        JOIN tbkelas tkelas ON tsiswa.id_kelas = tkelas.id_kelas 
-        JOIN tbmapel tmapel ON tsiswa.tahun_ajaran = tmapel.id_tahunajaran
-        WHERE tsiswa.nm_siswa = '$username'";
+$sql = "SELECT t1.id_kelas, t3.id_mapel_dtl, t4.nm_mapel, t4.tahun_ajaran FROM tbsiswa t1 JOIN tbkelas t2 ON t1.id_kelas = t2.id_kelas JOIN tbmapeldtl t3 ON t2.id_kelas = t3.id_kelas JOIN tbmapel t4 ON t3.id_mapel = t4.id_mapel WHERE t1.id_user = '$id_siswa'";
 
 $result = $conn->query($sql);
 $mapelArray = [];
+$id_mapel_dtl = [];
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $mapelArray[] = $row['nm_mapel'];
+        $id_mapel_dtl[] = $row['id_mapel_dtl'];
     }
 } else {
 }
-$conn->close();
 ?>
 
 <div class="sidebar" data-background-color="dark">
@@ -73,10 +72,10 @@ $conn->close();
             <ul class="nav nav-collapse">
               <?php 
               if (!empty($mapelArray)): 
-                  foreach ($mapelArray as $mapel): 
+                  foreach ($mapelArray as $index => $mapel): 
               ?>
               <li>
-                <a href="<?= url('/siswa/materi.php'); ?>">
+                <a href="<?= url('/siswa/materi.php?id='.$id_mapel_dtl[$index]); ?>">
                   <span class="sub-item"><?= $mapel; ?></span>
                 </a>
               </li>
@@ -97,9 +96,9 @@ $conn->close();
           </a>
           <div class="collapse" id="tugasDropdown">
             <ul class="nav nav-collapse">
-              <?php foreach ($mapelArray as $mapel): ?>
+              <?php foreach ($mapelArray as $index => $mapel): ?>
               <li>
-                <a href="<?= url('/siswa/tugas.php'); ?>">
+                <a href="<?= url('/siswa/tugas.php?id='.$id_mapel_dtl[$index]); ?>">
                   <span class="sub-item"><?= $mapel; ?></span>
                 </a>
               </li>
@@ -115,7 +114,7 @@ $conn->close();
           </a>
           <div class="collapse" id="quizDropdown">
             <ul class="nav nav-collapse">
-              <?php foreach ($mapelArray as $mapel): ?>
+              <?php foreach ($mapelArray as $index => $mapel): ?>
               <li>
                 <a href="<?= url('/siswa/kuis.php'); ?>">
                   <span class="sub-item"><?= $mapel; ?></span>
@@ -125,7 +124,7 @@ $conn->close();
             </ul>
           </div>
         </li>
-        <li class="nav-item <?= ($menu == 'Ujian') ? 'active' : ''; ?>">
+        <!-- <li class="nav-item <?= ($menu == 'Ujian') ? 'active' : ''; ?>">
           <a data-bs-toggle="collapse" href="#ujianDropdown" aria-expanded="false" aria-controls="ujianDropdown">
             <i class="fas fa-pencil-alt"></i>
             <p>Ujian</p>
@@ -133,7 +132,7 @@ $conn->close();
           </a>
           <div class="collapse" id="ujianDropdown">
             <ul class="nav nav-collapse">
-              <?php foreach ($mapelArray as $mapel): ?>
+              <?php foreach ($mapelArray as $index => $mapel): ?>
               <li>
                 <a href="<?= url('/siswa/ujian.php'); ?>">
                   <span class="sub-item"><?= $mapel; ?></span>
@@ -142,7 +141,7 @@ $conn->close();
               <?php endforeach; ?>
             </ul>
           </div>
-        </li>
+        </li> -->
         <li class="nav-item <?= ($menu == 'Nilai') ? 'active' : ''; ?>">
           <a href="<?= url('/siswa/nilai.php'); ?>">
             <i class="fas fa-chart-bar"></i>

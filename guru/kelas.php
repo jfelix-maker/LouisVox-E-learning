@@ -48,14 +48,18 @@
     if(!isset($_GET['kl'])){
       header('Location: '.url("/guru"));
     }
-    $id = $_GET['kl'];
-    $dk = ($conn->query("SELECT * FROM tbkelas WHERE id_kelas = '$id'"))->fetch_assoc();
     ?>
     <div class="wrapper">
       <!-- menu -->
        <?php
         $menu = "kelas";
         require 'menu.php';
+        if(isset($_GET['kl'])){
+          $kelas = $_GET['kl'];
+          $_SESSION['kelas'] = $_GET['kl'];
+        }
+        $id = $_GET['kl'];
+        $dk = ($conn->query("SELECT * FROM tbkelas WHERE id_kelas = '$kelas'"))->fetch_assoc();
        ?>
       <!-- end menu -->
 
@@ -91,8 +95,39 @@
               </div>
             </div>
             <div class="row">
+           
+            <div class="col-md-12">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">
+                      Mata Pelajaran
+                      <select class="form-select" name="mapel" id="mapel">
+                        <?php
+                          $qdm = $conn->query("SELECT * FROM tbmapeldtl tmd, tbmapel tm WHERE tmd.id_mapel = tm.id_mapel AND tmd.id_guru = '$id_guru' AND tmd.id_kelas = '$id';");
+                          $m = $qdm->num_rows;
+                          $u = 0;
+                          while($dtlm = $qdm->fetch_assoc()){
+                          $u++;
+                          $id_dtl = $dtlm['id_mapel_dtl'];
+                          $qm = $conn->query("SELECT * FROM tbmateri tm WHERE tm.id_mapel_dtl = '$id_dtl'");
+                          $dm = $qm->num_rows;
+                          $qt = $conn->query("SELECT * FROM tbtugas tt WHERE tt.id_mapel_dtl = '$id_dtl'");
+                          $dt = $qt->num_rows;
+                          $qku = $conn->query("SELECT * FROM tbkuis tk WHERE tk.id_mapel_dtl = '$id_dtl'");
+                          $dku = $qku->num_rows;
+                        ?>
+                        <option data-materi = "<?= $dm; ?>" data-tugas="<?= $dt; ?>" data-kuis="<?= $dku; ?>" value="<?= $dtlm['id_mapel_dtl']; ?>" <?= ($u == $m)? 'selected': ''; ?>><?= $dtlm['nm_mapel']; ?></option>
+                        <?php
+                          }
+                        ?>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            
               <div class="col-sm-6 col-md-4">
-                <a class="card card-stats card-round" href="<?= url("/guru/materi.php?kl=".$id); ?>">
+                <a class="card card-stats card-round" id="url-materi" href="<?= url("/guru/materi.php?kl=".$id_dtl); ?>">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -105,11 +140,8 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Materi</p>
-                          <?php
-                          $qm = $conn->query("SELECT * FROM tbmateri tm, tbmapeldtl tmd WHERE tm.id_mapel_dtl = tmd.id_mapel_dtl AND tmd.id_guru = '$id_guru'");
-                          $dm = $qm->num_rows;
-                          ?>
-                          <h4 class="card-title"><?= $dm; ?></h4>
+                         
+                          <h4 class="card-title" id="materi"><?= $dm; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -117,7 +149,7 @@
                 </a>
               </div>
               <div class="col-sm-6 col-md-4">
-                <a class="card card-stats card-round" href="<?= url("/guru/tugas.php?kl=".$id); ?>">
+                <a class="card card-stats card-round" id="url-tugas" href="<?= url("/guru/tugas.php?kl=".$id_dtl); ?>">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -130,11 +162,8 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Tugas</p>
-                          <?php
-                          $qt = $conn->query("SELECT * FROM tbtugas tt, tbmapeldtl tmd WHERE tt.id_mapel_dtl = tmd.id_mapel_dtl AND tmd.id_guru = '$id_guru'");
-                          $dt = $qt->num_rows;
-                          ?>
-                          <h4 class="card-title"><?= $dt; ?></h4>
+                          
+                          <h4 class="card-title" id="tugas" ><?= $dt; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -142,7 +171,7 @@
                 </a>
               </div>
               <div class="col-sm-6 col-md-4">
-                <a class="card card-stats card-round" href="<?= url("/guru/quiz.php?kl=".$id); ?>">
+                <a class="card card-stats card-round" id="url-kuis"  href="<?= url("/guru/kuis.php?kl=".$id_dtl); ?>">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -155,17 +184,16 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Quiz</p>
-                          <?php
-                          $qku = $conn->query("SELECT * FROM tbkuis tk, tbmapeldtl tmd WHERE tk.id_mapel_dtl = tmd.id_mapel_dtl AND tmd.id_guru = '$id_guru'");
-                          $dku = $qku->num_rows;
-                          ?>
-                          <h4 class="card-title"><?= $dku; ?></h4>
+                          
+                          <h4 class="card-title" id="kuis" ><?= $dku; ?></h4>
                         </div>
                       </div>
                     </div>
                   </div>
                 </a>
               </div>
+                 
+
               <div class="col-md-12">
                 <div class="card">
                   <div class="card-header">
@@ -233,9 +261,37 @@
     <script src="../assets/js/plugin/jsvectormap/world.js"></script>
 
     <!-- Sweet Alert -->
-    <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="../assets/js/plugin/sweetalert/sweetalert2-11.js"></script>
 
-    <!-- Kaiadmin JS -->
     <script src="../assets/js/main.min.js"></script>
+
+    <script>
+    var SweetAlert2Demo = (function () {
+        var initDemos = function () {
+            $(document).on('change', '#mapel',function (e) {   
+              var id = $(this).val();
+                var dataMateri = $(this).find(':selected').data('materi');
+                var dataTugas = $(this).find(':selected').data('tugas');
+                var dataKuis = $(this).find(':selected').data('kuis');
+                $('#url-materi').attr('href', '<?= url("/guru/materi.php?kl="); ?>'+id);
+                $('#url-tugas').attr('href', '<?= url("/guru/tugas.php?kl="); ?>'+id);
+                $('#url-kuis').attr('href', '<?= url("/guru/kuis.php?kl="); ?>'+id);
+                $('#materi').text(dataMateri);
+                $('#tugas').text(dataTugas);
+                $('#kuis').text(dataKuis);              
+            });
+        };
+
+        return {
+            init: function () {
+                initDemos();
+            },
+        };
+    })();
+
+    jQuery(document).ready(function () {
+        SweetAlert2Demo.init();
+    });
+    </script>
   </body>
 </html>

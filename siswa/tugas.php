@@ -63,7 +63,8 @@
     </style>
   </head>
   <body>
-    <?php require '../config.php'; ?>
+    <?php require '../config.php';
+    date_default_timezone_set('Asia/Jakarta');  ?>
     <div class="wrapper">
       <?php
         $menu = "index";
@@ -80,35 +81,40 @@
               </div>
             </div>
 
-            <div class="material-section">
-              <h4>Tugas 1</h4>
-              <ul class="material-list">
-                <li><a href="path/to/materi1.pdf" target="_blank">Materi 1: Pengenalan Matematika</a></li>
-              </ul>
-              <h5>Unggah Tugas Anda</h5>
-              <form action="upload.php" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                  <label for="file">Pilih file untuk diunggah:</label>
-                  <input type="file" name="file" id="file" class="form-control">
-                </div>
-                <button type="submit" name="submit" class="btn btn-primary mt-3">Unggah Tugas</button>
-              </form>
-            </div>
+            <?php
+              $dtl = (isset($_GET['id'])) ? $_GET['id'] : 0;
+              $qu = $conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = ttd.id_tugas AND tt.id_mapel_dtl = '$dtl'");
+              
+              while($data = $qu->fetch_assoc()){
 
-            <div class="material-section">
-              <h4>Tugas 2</h4>
-              <ul class="material-list">
-                <li><a href="path/to/materi2.pdf" target="_blank">Materi 2: Pengertian Matematika</a></li>
-              </ul>
-              <h5>Unggah Tugas Anda</h5>
-              <form action="upload.php" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                  <label for="file">Pilih file untuk diunggah:</label>
-                  <input type="file" name="file" id="file" class="form-control">
-                </div>
-                <button type="submit" name="submit" class="btn btn-primary mt-3">Unggah Tugas</button>
-              </form>
-            </div>
+                  $current_time = new DateTime();
+                  $start_time = new DateTime($data['mulai']);
+                  $end_time = new DateTime($data['selesai']); 
+                  if($current_time >= $start_time && $current_time <= $end_time) {
+                      ?>
+                      <div class="material-section">
+                        <h4><?= $data['nm_tugas']; ?></h4>
+                        <ul class="material-list">
+                          <li><a href="<?= $data['dokumen']; ?>" target="_blank"><?= $data['dtl_tugas']; ?></a></li>
+                        </ul>
+                        <h5>Unggah Tugas Anda</h5>
+                        <form action="do-tugas.php" method="post" enctype="multipart/form-data">
+                          <div class="form-group">
+                            <input type="hidden" name="tugas" value="<?= $data['id_tugas']; ?>">
+                            <input type="hidden" name="mapel" value="<?= $dtl; ?>">
+
+                            <label for="file">Pilih file untuk diunggah:</label>
+                            <input type="file" name="dok" id="file" class="form-control">
+                          </div>
+                          <button type="submit" name="submit" class="btn btn-primary mt-3">Unggah Tugas</button>
+                        </form>
+                      </div>
+                      <?php
+                  } else {
+                      continue;
+                  }
+                }
+              ?>
           </div>
         </div>
       </div>

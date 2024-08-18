@@ -79,23 +79,21 @@
                 <h3 class="fw-bold mb-3">Materi</h3>
               </div>
             </div>
-
             <div class="material-section">
-              <h4>Pertemuan Pertama</h4>
+              <?php
+                $dtl = (isset($_GET['id'])) ? $_GET['id'] : 0;
+                $qu = $conn->query("SELECT * FROM tbmateri tm, tbmateridtl tmd WHERE tm.id_materi = tmd.id_materi AND tm.id_mapel_dtl = '$dtl'");
+                while($data = $qu->fetch_assoc()){
+              ?>
+              
+              <h4><?= $data['nm_materi']; ?></h4>
               <ul class="material-list">
-                <li><a href="path/to/materi1.pdf" target="_blank">Materi 1: Pengenalan Matematika</a></li>
-                <li><a href="path/to/materi2.pdf" target="_blank">Materi 2: Pengertian Matematika</a></li>
+                <li><a href="<?= $data['dokumen']; ?>" target="_blank"><?= $data['nm_materi'] . " : " . $data['dtl_materi']; ?></a></li>
               </ul>
+              <?php
+                }
+              ?>
             </div>
-
-            <div class="material-section">
-              <h4>Pertemuan Kedua</h4>
-              <ul class="material-list">
-                <li><a href="path/to/materi3.pdf" target="_blank">Materi 3: Penjabaran Matematika</a></li>
-                <li><a href="path/to/materi4.pdf" target="_blank">Materi 4: Tugas Matematika</a></li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
