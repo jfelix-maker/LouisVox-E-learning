@@ -122,15 +122,9 @@
                           if(!isset($_GET['dtl'])){
                         ?>
                           <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
-                            <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>
-                            <label>No Tugas</label>
-                            <input type="number" class="form-control" name="no" placeholder="No Tugas" required>                            
+                            <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                          
                             <label>Judul Tugas</label>
-                            <input type="text" class="form-control" name="nm_tugas" placeholder="Judul Tugas" required>
-                            <label>Deskripsi Tugas</label>
-                            <input type="text" class="form-control" name="dtl_tugas" placeholder="Deskripsi Tugas" required>
-                            <label>PDF</label>
-                            <input type="file" class="form-control" name="dok" placeholder="PDF" required>
+                            <input type="text" class="form-control" name="nm_kuis" placeholder="Judul Tugas" required>
                             <label>Mulai</label>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -166,15 +160,9 @@
                           ?>
                             <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
                               <input type="hidden" name="PUT" value="<?= $dtl; ?>"/>
-                              <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>
-                              <label>No Tugas</label>
-                              <input type="number" class="form-control" value="<?= $raw['no']; ?>" name="no" placeholder="No Tugas" required>                              
+                              <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                             
                               <label>Judul Tugas</label>
                               <input type="text" class="form-control" value="<?= $raw['nm_tugas']; ?>" name="nm_tugas" placeholder="Judul Tugas" required>
-                              <label>Deskripsi Tugas</label>
-                              <input type="text" class="form-control" value="<?= $raw['dtl_tugas']; ?>" name="dtl_tugas" placeholder="Deskripsi Tugas" required>
-                              <label>PDF</label>
-                              <input type="file" class="form-control" name="dok" placeholder="PDF">
                               <label>Mulai</label>
                               <div class="row g-3">
                                   <div class="col-md-6">
@@ -219,8 +207,7 @@
                           <th scope="col">Deskripsi</th>
                           <th scope="col">Mulai</th>
                           <th scope="col">Selesai</th>
-                          <th scope="col">PDF</th>
-                          <th scope="col" colspan="3">Aksi</th>
+                          <th scope="col" colspan="4">Aksi</th>
                         </tr>    
                     </thead>
                     <tbody>
@@ -235,13 +222,13 @@
                         <td><?= $data['dtl_tugas']; ?></td>
                         <td><?= tanggal($data['mulai']); ?></td>
                         <td><?= tanggal($data['selesai']); ?></td>
-                        <td><a <?= ($data['dokumen'] == "")? "" : "href='".$data['dokumen']."'"; ?> target="_blank"><?= ($data['dokumen'] == "")? "Kosong" : "Ada"; ?></td>
-                        <td><a href="<?= url("/guru/jawab-tugas.php?kl=".$data['id_tugas']); ?>" class="btn btn-primary"> Jawaban Siswa</a></td>
-                        <td><a href="<?= url("/guru/tugas.php?kl=".$id."&dtl=".$data['id_tugas']); ?>" class="btn btn-warning"> Edit</a></td>
+                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$data['id_tugas']); ?>" class="btn btn-info"> Soal</a></td>
+                        <td><a href="<?= url("/guru/jawab=-kuis.php?kl=".$data['id_tugas']); ?>" class="btn btn-primary"> Jawaban Siswa</a></td>
+                        <td><a href="<?= url("/guru/kuis.php?kl=".$id."&dtl=".$data['id_tugas']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
                         class="btn btn-danger"
-                        id="del-tugas"
+                        id="del-kuis"
                         data-id="<?= $data['id_tugas']; ?>">
                           Delete
                         </button></td>
@@ -295,7 +282,7 @@
     <script>
     var SweetAlert2Demo = (function () {
         var initDemos = function () {
-            $(document).on('click', '#del-tugas',function (e) {   
+            $(document).on('click', '#del-kuis',function (e) {   
               var id = $(this).data('id');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
