@@ -121,10 +121,10 @@
                         <?php
                           if(!isset($_GET['dtl'])){
                         ?>
-                          <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
+                          <form action="do-kuis.php" method="POST" class="form-group">
                             <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                          
-                            <label>Judul Tugas</label>
-                            <input type="text" class="form-control" name="nm_kuis" placeholder="Judul Tugas" required>
+                            <label>Judul Kuis</label>
+                            <input type="text" class="form-control" name="nm_kuis" placeholder="Judul Kuis" required>
                             <label>Mulai</label>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -154,15 +154,15 @@
                           <?php
                             if(isset($_GET['dtl'])){
                               $dtl = $_GET['dtl'];
-                              $raw = ($conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = '$dtl' AND ttd.id_tugas = '$dtl' LIMIT 1;"))->fetch_assoc();
+                              $raw = ($conn->query("SELECT * FROM tbkuis tk WHERE tk.id_kuis = '$dtl' LIMIT 1;"))->fetch_assoc();
                               $m = explode(' ', $raw['mulai']);
                               $s = explode(' ', $raw['selesai']);
                           ?>
-                            <form action="do-tugas.php" method="POST" class="form-group" enctype="multipart/form-data">
+                            <form action="do-kuis.php" method="POST" class="form-group" enctype="multipart/form-data">
                               <input type="hidden" name="PUT" value="<?= $dtl; ?>"/>
                               <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                             
-                              <label>Judul Tugas</label>
-                              <input type="text" class="form-control" value="<?= $raw['nm_tugas']; ?>" name="nm_tugas" placeholder="Judul Tugas" required>
+                              <label>Judul Kuis</label>
+                              <input type="text" class="form-control" value="<?= $raw['nm_kuis']; ?>" name="nm_kuis" placeholder="Judul Kuis" required>
                               <label>Mulai</label>
                               <div class="row g-3">
                                   <div class="col-md-6">
@@ -202,9 +202,8 @@
                   <table class="table table-hover">
                     <thead> 
                         <tr>
-                          <th scope="col">No</th>
-                          <th scope="col">Tugas</th>
-                          <th scope="col">Deskripsi</th>
+                          <th scope="col">#</th>
+                          <th scope="col">Nama Kuis</th>
                           <th scope="col">Mulai</th>
                           <th scope="col">Selesai</th>
                           <th scope="col" colspan="4">Aksi</th>
@@ -212,24 +211,23 @@
                     </thead>
                     <tbody>
                     <?php
-                      $query = $conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = ttd.id_tugas AND tt.id_mapel_dtl = '$id' ORDER BY tt.no ASC");
+                      $query = $conn->query("SELECT * FROM tbkuis tk WHERE tk.id_mapel_dtl = '$id' ORDER BY tk.mulai ASC");
                       $i = 1;
                       while($data = $query->fetch_assoc()){
                     ?>
                       <tr>
-                        <td><?= $data['no']; ?></td>
-                        <td><?= $data['nm_tugas']; ?></td>
-                        <td><?= $data['dtl_tugas']; ?></td>
+                        <td><?= $i++; ?></td>
+                        <td><?= $data['nm_kuis']; ?></td>
                         <td><?= tanggal($data['mulai']); ?></td>
                         <td><?= tanggal($data['selesai']); ?></td>
-                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$data['id_tugas']); ?>" class="btn btn-info"> Soal</a></td>
-                        <td><a href="<?= url("/guru/jawab=-kuis.php?kl=".$data['id_tugas']); ?>" class="btn btn-primary"> Jawaban Siswa</a></td>
-                        <td><a href="<?= url("/guru/kuis.php?kl=".$id."&dtl=".$data['id_tugas']); ?>" class="btn btn-warning"> Edit</a></td>
+                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-info"> Soal</a></td>
+                        <td><a href="<?= url("/guru/jawab=-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-primary"> Jawaban Siswa</a></td>
+                        <td><a href="<?= url("/guru/kuis.php?kl=".$id."&dtl=".$data['id_kuis']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
                         class="btn btn-danger"
                         id="del-kuis"
-                        data-id="<?= $data['id_tugas']; ?>">
+                        data-id="<?= $data['id_kuis']; ?>">
                           Delete
                         </button></td>
                       </tr>
