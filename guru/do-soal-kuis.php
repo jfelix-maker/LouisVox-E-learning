@@ -19,15 +19,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }else{
         $id_mp = $_POST['id_dtl'];
-        $nm_kuis = $_POST['nm_kuis'];
-        $mulai_date = $_POST['mulai_date'];
-        $mulai_time = $_POST['mulai_time'];
-        $mulai = $mulai_date." ".$mulai_time;
-        $selesai_date = $_POST['selesai_date'];
-        $selesai_time = $_POST['selesai_time'];
-        $selesai = $selesai_date." ".$selesai_time;
-        $conn->query("INSERT INTO tbkuis(id_mapel_dtl, nm_kuis, mulai, selesai) VALUES ('$id_mp','$nm_kuis','$mulai','$selesai')");
-        header("Location: ".url("/guru/kuis.php?kl=".$id_mp));
+        $no_soal = $_POST['no_soal'];
+        $soal = $_POST['soal'];
+        $a = $_POST['a'];
+        $b = $_POST['b'];
+        $c = $_POST['c'];
+        $d = $_POST['d'];
+        $kunci = $_POST['kunci'];
+        $conn->query("INSERT INTO `tbkuisdtl`(`id_kuis`, `no`, `soal`, `a`, `b`, `c`, `d`, `kunci`) VALUES ('$id_mp','$no_soal','$soal','$a', '$b', '$c', '$d', '$kunci')");
+        header("Location: ".url("/guru/soal-kuis.php?kl=".$id_mp));
         exit;
     }
 }else if($_SERVER['REQUEST_METHOD'] === 'DELETE') {

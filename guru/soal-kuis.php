@@ -89,7 +89,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-home">
-                  Quiz
+                  Soal Quiz
                 </li>
               </ul>
             </div>
@@ -105,11 +105,11 @@
                       <?php
                         if(!isset($_GET['dtl'])){
                       ?>
-                        <h4 class="card-title">Form Quiz</h4>
+                        <h4 class="card-title">Form Soal Quiz</h4>
                       <?php
                         }else{
                       ?>
-                        <h4 class="card-tools">Form Edit Quiz</h4>
+                        <h4 class="card-tools">Form Edit Soal Quiz</h4>
                       <?php
                         }
                       ?>
@@ -121,28 +121,47 @@
                         <?php
                           if(!isset($_GET['dtl'])){
                         ?>
-                          <form action="do-kuis.php" method="POST" class="form-group">
-                            <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                          
-                            <label>Judul Kuis</label>
-                            <input type="text" class="form-control" name="nm_kuis" placeholder="Judul Kuis" required>
-                            <label>Mulai</label>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" name="mulai_date" placeholder="Mulai" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="time" class="form-control" name="mulai_time" placeholder="Mulai" required>
-                                </div>
-                            </div>
-                            <label>Selesai</label>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <input type="date" class="form-control" name="selesai_date" placeholder="Mulai" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="time" class="form-control" name="selesai_time" placeholder="Mulai" required>
-                                </div>
-                            </div>
+                          <form action="do-soal-kuis.php" method="POST" class="form-group">
+                            <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>  
+                            <label>No Kuis</label>
+                            <input type="number" class="form-control" name="no_soal" placeholder="No Kuis" required>                        
+                            <label>Soal Kuis</label>
+                            <input type="text" class="form-control" name="soal" placeholder="Soal Kuis" required>
+                            <label>Jawaban A</label>
+                            <input type="text" class="form-control" name="a" placeholder="Jawaban A" required>
+                            <label>Jawaban B</label>
+                            <input type="text" class="form-control" name="b" placeholder="Jawaban B" required>
+                            <label>Jawaban C</label>
+                            <input type="text" class="form-control" name="c" placeholder="Jawaban C" required>
+                            <label>Jawaban D</label>
+                            <input type="text" class="form-control" name="d" placeholder="Jawaban D" required>
+                            <label>Kunci Jawaban</label>
+                            <div class="d-flex">
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" value="A" name="kunci">
+                                <label class="form-check-label">
+                                  A
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" value="B" name="kunci">
+                                <label class="form-check-label">
+                                  B
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" value="C" name="kunci">
+                                <label class="form-check-label">
+                                  C
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio" value="D" name="kunci">
+                                <label class="form-check-label">
+                                  D
+                                </label>
+                              </div>
+                          </div>
                             <br>
                             <button type="submit" class="form-control btn btn-primary"> Submit</button>
                           </form>
@@ -202,27 +221,31 @@
                   <table class="table table-hover">
                     <thead> 
                         <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Nama Kuis</th>
-                          <th scope="col">Mulai</th>
-                          <th scope="col">Selesai</th>
-                          <th scope="col" colspan="4">Aksi</th>
+                          <th scope="col">No</th>
+                          <th scope="col">Soal Kuis</th>
+                          <th scope="col">Jawaban A</th>
+                          <th scope="col">Jawaban B</th>
+                          <th scope="col">Jawaban C</th>
+                          <th scope="col">Jawaban D</th>
+                          <th scope="col">Kunci Jawaban</th>
+                          <th scope="col" colspan="2">Aksi</th>
                         </tr>    
                     </thead>
                     <tbody>
                     <?php
-                      $query = $conn->query("SELECT * FROM tbkuis tk WHERE tk.id_mapel_dtl = '$id' ORDER BY tk.mulai ASC");
+                      $query = $conn->query("SELECT * FROM tbkuisdtl tkd WHERE tkd.id_kuis = '$id' ORDER BY tkd.no ASC");
                       $i = 1;
                       while($data = $query->fetch_assoc()){
                     ?>
                       <tr>
-                        <td><?= $i++; ?></td>
-                        <td><?= $data['nm_kuis']; ?></td>
-                        <td><?= tanggal($data['mulai']); ?></td>
-                        <td><?= tanggal($data['selesai']); ?></td>
-                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-info"> Soal</a></td>
-                        <td><a href="<?= url("/guru/nilai-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-primary"> Nilai Siswa</a></td>
-                        <td><a href="<?= url("/guru/kuis.php?kl=".$id."&dtl=".$data['id_kuis']); ?>" class="btn btn-warning"> Edit</a></td>
+                        <td><?= $data['no']; ?></td>
+                        <td><?= $data['soal']; ?></td>
+                        <td><?= $data['a']; ?></td>
+                        <td><?= $data['b']; ?></td>
+                        <td><?= $data['c']; ?></td>
+                        <td><?= $data['d']; ?></td>
+                        <td><?= $data['kunci']; ?></td>
+                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$id."&dtl=".$data['id_kuis']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
                         class="btn btn-danger"
