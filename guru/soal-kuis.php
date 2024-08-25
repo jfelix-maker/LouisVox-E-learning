@@ -103,11 +103,11 @@
                     <div class="card-header">
                       <div class="card-head-row card-tools-still-right">
                       <?php
-                        if(!isset($_GET['dtl'])){
+                        if(!isset($_GET['dtl']) && !isset($_GET['no'])){
                       ?>
                         <h4 class="card-title">Form Soal Quiz</h4>
                       <?php
-                        }else{
+                        }else if(isset($_GET['dtl']) && isset($_GET['no'])){
                       ?>
                         <h4 class="card-tools">Form Edit Soal Quiz</h4>
                       <?php
@@ -119,14 +119,14 @@
                       <div class="row">
                         <div class="col-md-6">
                         <?php
-                          if(!isset($_GET['dtl'])){
+                          if(!isset($_GET['dtl']) && !isset($_GET['no'])){
                         ?>
                           <form action="do-soal-kuis.php" method="POST" class="form-group">
                             <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>  
                             <label>No Kuis</label>
                             <input type="number" class="form-control" name="no_soal" placeholder="No Kuis" required>                        
                             <label>Soal Kuis</label>
-                            <input type="text" class="form-control" name="soal" placeholder="Soal Kuis" required>
+                            <textarea class="form-control" name="soal" placeholder="Soal Kuis" required></textarea>
                             <label>Jawaban A</label>
                             <input type="text" class="form-control" name="a" placeholder="Jawaban A" required>
                             <label>Jawaban B</label>
@@ -171,35 +171,53 @@
                         </div>
                         <div class="col-md-6">
                           <?php
-                            if(isset($_GET['dtl'])){
+                            if(isset($_GET['dtl']) && isset($_GET['no'])){
+                              $no = $_GET['no'];
                               $dtl = $_GET['dtl'];
-                              $raw = ($conn->query("SELECT * FROM tbkuis tk WHERE tk.id_kuis = '$dtl' LIMIT 1;"))->fetch_assoc();
-                              $m = explode(' ', $raw['mulai']);
-                              $s = explode(' ', $raw['selesai']);
+                              $raw = ($conn->query("SELECT * FROM tbkuisdtl tkd WHERE tkd.id_kuis = '$dtl' AND no = '$no' LIMIT 1;"))->fetch_assoc();
                           ?>
-                            <form action="do-kuis.php" method="POST" class="form-group" enctype="multipart/form-data">
+                            <form action="do-soal-kuis.php" method="POST" class="form-group" enctype="multipart/form-data">
                               <input type="hidden" name="PUT" value="<?= $dtl; ?>"/>
                               <input type="hidden" name="id_dtl" value="<?= $id; ?>"/>                             
-                              <label>Judul Kuis</label>
-                              <input type="text" class="form-control" value="<?= $raw['nm_kuis']; ?>" name="nm_kuis" placeholder="Judul Kuis" required>
-                              <label>Mulai</label>
-                              <div class="row g-3">
-                                  <div class="col-md-6">
-                                      <input type="date" class="form-control" value="<?= $m[0]; ?>" name="mulai_date" placeholder="Mulai" required>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <input type="time" class="form-control" value="<?= $m[1]; ?>" name="mulai_time" placeholder="Mulai" required>
-                                  </div>
-                              </div>
-                              <label>Selesai</label>
-                              <div class="row g-3">
-                                  <div class="col-md-6">
-                                      <input type="date" class="form-control" value="<?= $s[0]; ?>" name="selesai_date" placeholder="Mulai" required>
-                                  </div>
-                                  <div class="col-md-6">
-                                      <input type="time" class="form-control" value="<?= $m[1]; ?>" name="selesai_time" placeholder="Mulai" required>
-                                  </div>
-                              </div>
+                              <label>No</label>
+                            <input type="number" class="form-control"  value="<?= $raw['no']; ?>" name="no_soal" placeholder="No Kuis" readonly>                        
+                              <label>Soal Kuis</label>
+                              <textarea class="form-control" name="soal" placeholder="Soal Kuis" required><?= $raw['soal']; ?></textarea>
+                              <label>Jawaban A</label>
+                              <input type="text" class="form-control" value="<?= $raw['a']; ?>" name="a" placeholder="Jawaban A" required>
+                              <label>Jawaban B</label>
+                              <input type="text" class="form-control" value="<?= $raw['b']; ?>" name="b" placeholder="Jawaban B" required>
+                              <label>Jawaban C</label>
+                              <input type="text" class="form-control" value="<?= $raw['c']; ?>" name="c" placeholder="Jawaban C" required>
+                              <label>Jawaban D</label>
+                              <input type="text" class="form-control" value="<?= $raw['d']; ?>" name="d" placeholder="Jawaban D" required>
+                              <label>Kunci Jawaban</label>
+                              <div class="d-flex">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" value="A" name="kunci" <?= ($raw['kunci'] == 'A')? 'checked': ''; ?>>
+                                  <label class="form-check-label">
+                                    A
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" value="B" name="kunci" <?= ($raw['kunci'] == 'B')? 'checked': ''; ?>>
+                                  <label class="form-check-label">
+                                    B
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" value="C" name="kunci" <?= ($raw['kunci'] == 'C')? 'checked': ''; ?>>
+                                  <label class="form-check-label">
+                                    C
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" value="D" name="kunci" <?= ($raw['kunci'] == 'D')? 'checked': ''; ?>>
+                                  <label class="form-check-label">
+                                    D
+                                  </label>
+                                </div>
+                            </div>
                               <br>
                               <button type="submit" class="form-control btn btn-primary"> Submit</button>
                             </form>
@@ -245,12 +263,13 @@
                         <td><?= $data['c']; ?></td>
                         <td><?= $data['d']; ?></td>
                         <td><?= $data['kunci']; ?></td>
-                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$id."&dtl=".$data['id_kuis']); ?>" class="btn btn-warning"> Edit</a></td>
+                        <td><a href="<?= url("/guru/soal-kuis.php?kl=".$id."&dtl=".$data['id_kuis']."&no=".$data['no']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
                         class="btn btn-danger"
                         id="del-kuis"
-                        data-id="<?= $data['id_kuis']; ?>">
+                        data-id="<?= $data['id_kuis']; ?>"
+                        data-no="<?= $data['no']; ?>">
                           Delete
                         </button></td>
                       </tr>
@@ -305,6 +324,7 @@
         var initDemos = function () {
             $(document).on('click', '#del-kuis',function (e) {   
               var id = $(this).data('id');
+              var no = $(this).data('no');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
                 text: "Data akan di hapus",
@@ -316,9 +336,9 @@
               }).then((result) => {
                 if (result.isConfirmed) {
                   $.ajax({
-                    url: '<?= url("/guru/do-kuis.php")?>',
+                    url: '<?= url("/guru/do-soal-kuis.php")?>',
                     type: 'DELETE',
-                    data: JSON.stringify({ idKuis: id}),
+                    data: JSON.stringify({ idKuis: id, No: no}),
                     success: function(data, textStatus, xhr) {
                     console.log(data);
                     swal.fire({

@@ -92,7 +92,7 @@
                   </div>
                 </a>
               </div>
-              <div class="col-12 col-sm-6 col-lg-4">
+              <!-- <div class="col-12 col-sm-6 col-lg-4">
                 <a href="<?= url('/siswa/ujian.php'); ?>" class="text-decoration-none">
                   <div class="card shadow-sm border-0">
                     <div class="card-body p-4 text-center">
@@ -105,7 +105,7 @@
                     </div>
                   </div>
                 </a>
-              </div>
+              </div> -->
             </div>
 
           </div>

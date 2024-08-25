@@ -35,13 +35,14 @@
     <?php require '../config.php'; ?>
     <div class="wrapper">
        <?php
-        $menu = "index";
+        $menu = "Quiz";
         require 'menu.php';
        ?>
 
        redesian ini aja nggak usah yang lain
         <div class="main-panel">
             <?php require 'header.php'; ?>
+            <?php unset($_SESSION["jawab"]); ?>
             <div class="container">
                 <div class="page-inner d-flex align-items-center justify-content-center" style="min-height: 100vh;"> 
                     <div class="card w-100" style="max-width: 600px; margin-left: 20px; margin-right: 20px;">
@@ -54,8 +55,8 @@
                                 <li>Pastikan Anda menjawab semua soal dengan benar.</li>
                                 <li>Anda tidak bisa kembali ke soal sebelumnya setelah melanjutkan.</li>
                             </ul>
-                            <form action="kuisdtl.php" method="post">
-                                <button type="submit" class="btn btn-primary">Mulai Kuis</button>
+                            <form action="kuisdtl.php?id=<?= $_GET['id']; ?>" method="post">
+                                <button type="submit" class="btn btn-primary" name="mulai">Mulai Kuis</button>
                             </form>
                         </div>
                     </div>

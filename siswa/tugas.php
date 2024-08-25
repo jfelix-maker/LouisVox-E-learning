@@ -67,7 +67,7 @@
     date_default_timezone_set('Asia/Jakarta');  ?>
     <div class="wrapper">
       <?php
-        $menu = "index";
+        $menu = "Tugas";
         require 'menu.php';
       ?>
 

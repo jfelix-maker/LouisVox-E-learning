@@ -28,7 +28,7 @@
   <body>
     <?php require '../config.php'; ?>
     <div class="wrapper">
-      <?php $menu = "kelas"; require 'menu.php'; ?>
+      <?php $menu = "Nilai"; require 'menu.php'; ?>
 
       <div class="main-panel">
         <?php require 'header.php'; ?>

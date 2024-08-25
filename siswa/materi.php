@@ -66,7 +66,7 @@
     <?php require '../config.php'; ?>
     <div class="wrapper">
       <?php
-        $menu = "index";
+        $menu = "Materi";
         require 'menu.php';
       ?>
 

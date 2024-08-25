@@ -71,7 +71,7 @@
     <?php require '../config.php'; ?>
     <div class="wrapper">
        <?php
-        $menu = "index";
+        $menu = "Quiz";
         require 'menu.php';
        ?>
 
@@ -86,40 +86,50 @@
                 <div class="ms-md-auto py-2 py-md-0">
                 </div>
             </div>
+            <?php
+            if(isset($_POST['mulai']) && isset($_GET['id'])){
+                $id_kuis = $_GET['id'];
+                $_SESSION['jawab'] = ['id' => $id_kuis, 'jawab' => []];
+            }else if(isset($_SESSION['jawab']) && !isset($_GET['id']) || $_GET['id'] == null){
+                echo '<script type="text/javascript">';
+                echo 'window.location.href="'.url("/siswa/kuisdtl.php?id=".$_SESSION['jawab']['id']).'";';
+                echo '</script>';
+            }
+            $jawab = $_SESSION['jawab'];
+            ?>
             <div class="row">
-              <div id="question1" class="question-container active">
-                  <div class="d-flex">
-                      <div class="flex-grow-1">
-                          <h5 class="fw-bold">1. Berapakah hasil dari 2 + 2?</h5>
-                          <div>
-                              <input type="radio" id="soal1_jawaban1" name="soal1" value="3" onclick="checkAnswer(1, '3', '4')">
-                              <label for="soal1_jawaban1">3</label><br>
-                              <input type="radio" id="soal1_jawaban2" name="soal1" value="4" onclick="checkAnswer(1, '4', '4')">
-                              <label for="soal1_jawaban2">4</label><br>
-                              <input type="radio" id="soal1_jawaban3" name="soal1" value="5" onclick="checkAnswer(1, '5', '4')">
-                              <label for="soal1_jawaban3">5</label><br>
-                              <input type="radio" id="soal1_jawaban4" name="soal1" value="6" onclick="checkAnswer(1, '6', '4')">
-                              <label for="soal1_jawaban4">6</label>
-                          </div>
-                          <p id="feedback1" class="feedback"></p>
-                      </div>
-                      <div class="question-buttons"></div>
-                  </div>
-              </div>
-
+                <div id="question1" class="question-container active">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">
+                            <h5 class="fw-bold">1. Berapakah hasil dari 2 + 2?</h5>
+                            <div>
+                                <input type="radio" id="soal1_jawaban1" name="soal1" value="3" onclick="checkAnswer(1, '3', '4')">
+                                <label for="soal1_jawaban1">3</label><br>
+                                <input type="radio" id="soal1_jawaban2" name="soal1" value="4" onclick="checkAnswer(1, '4', '4')">
+                                <label for="soal1_jawaban2">4</label><br>
+                                <input type="radio" id="soal1_jawaban3" name="soal1" value="5" onclick="checkAnswer(1, '5', '4')">
+                                <label for="soal1_jawaban3">5</label><br>
+                                <input type="radio" id="soal1_jawaban4" name="soal1" value="6" onclick="checkAnswer(1, '6', '4')">
+                                <label>6</label>
+                            </div>
+                            <p id="feedback1" class="feedback"></p>
+                        </div>
+                        <div class="question-buttons"></div>
+                    </div>
+                </div>
               <div id="question2" class="question-container">
                   <div class="d-flex">
                       <div class="flex-grow-1">
                           <h5 class="fw-bold">2. Ibukota Indonesia adalah?</h5>
                           <div>
                               <input type="radio" id="soal2_jawaban1" name="soal2" value="Jakarta" onclick="checkAnswer(2, 'Jakarta', 'Jakarta')">
-                              <label for="soal2_jawaban1">Jakarta</label><br>
+                              <label>Jakarta</label><br>
                               <input type="radio" id="soal2_jawaban2" name="soal2" value="Surabaya" onclick="checkAnswer(2, 'Surabaya', 'Jakarta')">
-                              <label for="soal2_jawaban2">Surabaya</label><br>
+                              <label>Surabaya</label><br>
                               <input type="radio" id="soal2_jawaban3" name="soal2" value="Bandung" onclick="checkAnswer(2, 'Bandung', 'Jakarta')">
-                              <label for="soal2_jawaban3">Bandung</label><br>
+                              <label>Bandung</label><br>
                               <input type="radio" id="soal2_jawaban4" name="soal2" value="Medan" onclick="checkAnswer(2, 'Medan', 'Jakarta')">
-                              <label for="soal2_jawaban4">Medan</label>
+                              <label>Medan</label>
                           </div>
                           <p id="feedback2" class="feedback"></p>
                       </div>
@@ -133,13 +143,13 @@
                           <h5 class="fw-bold">3. Planet terdekat dengan matahari adalah?</h5>
                           <div>
                               <input type="radio" id="soal3_jawaban1" name="soal3" value="Bumi" onclick="checkAnswer(3, 'Bumi', 'Merkurius')">
-                              <label for="soal3_jawaban1">Bumi</label><br>
+                              <label>Bumi</label><br>
                               <input type="radio" id="soal3_jawaban2" name="soal3" value="Merkurius" onclick="checkAnswer(3, 'Merkurius', 'Merkurius')">
-                              <label for="soal3_jawaban2">Merkurius</label><br>
+                              <label>Merkurius</label><br>
                               <input type="radio" id="soal3_jawaban3" name="soal3" value="Mars" onclick="checkAnswer(3, 'Mars', 'Merkurius')">
-                              <label for="soal3_jawaban3">Mars</label><br>
+                              <label>Mars</label><br>
                               <input type="radio" id="soal3_jawaban4" name="soal3" value="Venus" onclick="checkAnswer(3, 'Venus', 'Merkurius')">
-                              <label for="soal3_jawaban4">Venus</label>
+                              <label>Venus</label>
                           </div>
                           <p id="feedback3" class="feedback"></p>
                       </div>
@@ -170,89 +180,79 @@
     <script src="../assets/js/main.min.js"></script>
 
     <script>
-        let answeredQuestions = {};
-        const totalQuestions = 3;
+        // seesion php
+        let answeredQuestions = <?= json_encode($jawab['jawab']) ?>;
+        const totalQuestions = 2;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
             generateButtons(totalQuestions);
         });
 
         function generateButtons(total) {
-            const buttonContainers = document.querySelectorAll('.question-buttons');
-
-            buttonContainers.forEach(container => {
-                container.innerHTML = '';
+            $('.question-buttons').each(function() {
+                $(this).empty();
 
                 for (let i = 1; i <= total; i++) {
-                    const button = document.createElement('button');
-                    button.className = 'btn btn-primary';
-                    button.dataset.question = i;
-                    button.textContent = i;
-                    button.onclick = function() {
-                        showQuestion(i);
-                    };
-                    container.appendChild(button);
+                    const $button = $('<button>')
+                        .addClass('btn btn-primary')
+                        .attr('data-question', i)
+                        .text(i)
+                        .on('click', function() {
+                            showQuestion(i);
+                        });
+
+                    $(this).append($button);
+
                     if (i % 3 === 0) {
-                container.appendChild(document.createElement('br'));
-            }
+                        $(this).append('<br>');
+                    }
                 }
             });
         }
 
         function checkAnswer(questionNumber, selectedAnswer, correctAnswer) {
-            const feedbackElement = document.getElementById(`feedback${questionNumber}`);
-            const buttons = document.querySelectorAll(`.question-buttons button[data-question="${questionNumber}"]`);
+            const $feedbackElement = $(`#feedback${questionNumber}`);
+            const $buttons = $(`.question-buttons button[data-question="${questionNumber}"]`);
 
-            buttons.forEach(button => {
-                button.classList.remove('btn-primary', 'btn-success', 'btn-danger');
-            });
+            $buttons.removeClass('btn-primary btn-success btn-danger');
 
             if (selectedAnswer === correctAnswer) {
-                feedbackElement.textContent = "Jawaban benar!";
-                feedbackElement.style.color = "green";
-                
-                buttons.forEach(button => {
-                    button.classList.add('btn-success');
-                    button.disabled = true;
-                });
+                $feedbackElement.text("Jawaban benar!").css('color', 'green');
 
+                $buttons.addClass('btn-success').prop('disabled', true);
             } else {
-                feedbackElement.textContent = "Jawaban salah. Coba lagi!";
-                feedbackElement.style.color = "red";
-                
-                buttons.forEach(button => {
-                    button.classList.add('btn-danger');
-                    button.disabled = true;
-                });
+                $feedbackElement.text("Jawaban salah. Coba lagi!").css('color', 'red');
+
+                $buttons.addClass('btn-danger').prop('disabled', true);
             }
 
             answeredQuestions[questionNumber] = true;
+            console.log(answeredQuestions);
             checkAllAnswered();
         }
 
         function showQuestion(questionNumber) {
-            const questions = document.querySelectorAll('.question-container');
-            questions.forEach(question => question.classList.remove('active'));
-            document.getElementById(`question${questionNumber}`).classList.add('active');
-            
+            $('.question-container').removeClass('active');
+            $(`#question${questionNumber}`).addClass('active');
+
             if (answeredQuestions[questionNumber]) {
-                document.querySelectorAll(`.question-buttons button[data-question="${questionNumber}"]`).forEach(button => {
-                    button.classList.remove('btn-primary');
-                    button.classList.add(answeredQuestions[questionNumber] === true ? 'btn-success' : 'btn-danger');
-                    button.disabled = true;
+                $(`.question-buttons button[data-question="${questionNumber}"]`).each(function() {
+                    $(this).removeClass('btn-primary');
+                    $(this).addClass(answeredQuestions[questionNumber] === true ? 'btn-success' : 'btn-danger');
+                    $(this).prop('disabled', true);
                 });
             }
         }
 
         function checkAllAnswered() {
             if (Object.keys(answeredQuestions).length === totalQuestions) {
-                document.getElementById('finish-button').style.display = 'block';
+                $('#finish-button').show();
             }
         }
 
         function finishQuiz() {
             const confirmFinish = confirm("Apakah Anda yakin semua jawaban sudah benar? Klik 'OK' untuk menyelesaikan kuis atau 'Cancel' untuk kembali memeriksa jawaban Anda.");
-            
+
             if (confirmFinish) {
                 window.location.href = 'kuisselesai.php';
             }
