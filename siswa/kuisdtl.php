@@ -136,26 +136,6 @@
                       <div class="question-buttons"></div>
                   </div>
               </div>
-
-              <div id="question3" class="question-container">
-                  <div class="d-flex">
-                      <div class="flex-grow-1">
-                          <h5 class="fw-bold">3. Planet terdekat dengan matahari adalah?</h5>
-                          <div>
-                              <input type="radio" id="soal3_jawaban1" name="soal3" value="Bumi" onclick="checkAnswer(3, 'Bumi', 'Merkurius')">
-                              <label>Bumi</label><br>
-                              <input type="radio" id="soal3_jawaban2" name="soal3" value="Merkurius" onclick="checkAnswer(3, 'Merkurius', 'Merkurius')">
-                              <label>Merkurius</label><br>
-                              <input type="radio" id="soal3_jawaban3" name="soal3" value="Mars" onclick="checkAnswer(3, 'Mars', 'Merkurius')">
-                              <label>Mars</label><br>
-                              <input type="radio" id="soal3_jawaban4" name="soal3" value="Venus" onclick="checkAnswer(3, 'Venus', 'Merkurius')">
-                              <label>Venus</label>
-                          </div>
-                          <p id="feedback3" class="feedback"></p>
-                      </div>
-                      <div class="question-buttons"></div>
-                  </div>
-              </div>
           </div>
           <div id="finish-button">
               <button class="btn btn-primary" onclick="finishQuiz()">Selesai</button>
@@ -243,7 +223,6 @@
                 });
             }
         }
-
         function checkAllAnswered() {
             if (Object.keys(answeredQuestions).length === totalQuestions) {
                 $('#finish-button').show();
