@@ -96,46 +96,36 @@
                 echo '</script>';
             }
             $jawab = $_SESSION['jawab'];
+            var_dump($jawab['jawab']);
+            $id_kuis = $_GET['id'];
             ?>
             <div class="row">
-                <div id="question1" class="question-container active">
+                <?php
+                    $qk = $conn->query("SELECT * FROM tbkuisdtl WHERE id_kuis = '$id_kuis' ORDER BY no ASC;");
+                    $i = 1;
+                    while($dk = $qk->fetch_assoc()){
+                ?>
+                <div id="question<?= $dk['no']; ?>" class="question-container <?= ($i++ == 1)? 'active': ''; ?>">
                     <div class="d-flex">
                         <div class="flex-grow-1">
-                            <h5 class="fw-bold">1. Berapakah hasil dari 2 + 2?</h5>
+                            <h5 class="fw-bold"><?= $dk['no'].". ".$dk['soal']; ?></h5>
                             <div>
-                                <input type="radio" id="soal1_jawaban1" name="soal1" value="3" onclick="checkAnswer(1, '3', '4')">
-                                <label for="soal1_jawaban1">3</label><br>
-                                <input type="radio" id="soal1_jawaban2" name="soal1" value="4" onclick="checkAnswer(1, '4', '4')">
-                                <label for="soal1_jawaban2">4</label><br>
-                                <input type="radio" id="soal1_jawaban3" name="soal1" value="5" onclick="checkAnswer(1, '5', '4')">
-                                <label for="soal1_jawaban3">5</label><br>
-                                <input type="radio" id="soal1_jawaban4" name="soal1" value="6" onclick="checkAnswer(1, '6', '4')">
-                                <label>6</label>
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban1" value="<?= $dk['a']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['a']; ?>')">
+                                <label for="soal<?= $dk['no']; ?>_jawaban1"><?= $dk['a']; ?></label><br>
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban2" value="<?= $dk['b']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['b']; ?>')">
+                                <label for="soal<?= $dk['no']; ?>_jawaban2"><?= $dk['b']; ?></label><br>
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban3" value="<?= $dk['c']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['c']; ?>')">
+                                <label for="soal<?= $dk['no']; ?>_jawaban3"><?= $dk['c']; ?></label><br>
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban4" value="<?= $dk['d']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['d']; ?>')">
+                                <label for="soal<?= $dk['no']; ?>_jawaban3"><?= $dk['d']; ?></label><br>
                             </div>
-                            <p id="feedback1" class="feedback"></p>
                         </div>
                         <div class="question-buttons"></div>
                     </div>
                 </div>
-              <div id="question2" class="question-container">
-                  <div class="d-flex">
-                      <div class="flex-grow-1">
-                          <h5 class="fw-bold">2. Ibukota Indonesia adalah?</h5>
-                          <div>
-                              <input type="radio" id="soal2_jawaban1" name="soal2" value="Jakarta" onclick="checkAnswer(2, 'Jakarta', 'Jakarta')">
-                              <label>Jakarta</label><br>
-                              <input type="radio" id="soal2_jawaban2" name="soal2" value="Surabaya" onclick="checkAnswer(2, 'Surabaya', 'Jakarta')">
-                              <label>Surabaya</label><br>
-                              <input type="radio" id="soal2_jawaban3" name="soal2" value="Bandung" onclick="checkAnswer(2, 'Bandung', 'Jakarta')">
-                              <label>Bandung</label><br>
-                              <input type="radio" id="soal2_jawaban4" name="soal2" value="Medan" onclick="checkAnswer(2, 'Medan', 'Jakarta')">
-                              <label>Medan</label>
-                          </div>
-                          <p id="feedback2" class="feedback"></p>
-                      </div>
-                      <div class="question-buttons"></div>
-                  </div>
-              </div>
+            <?php 
+                }
+            ?>
           </div>
           <div id="finish-button">
               <button class="btn btn-primary" onclick="finishQuiz()">Selesai</button>
@@ -162,11 +152,40 @@
     <script>
         // seesion php
         let answeredQuestions = <?= json_encode($jawab['jawab']) ?>;
-        const totalQuestions = 2;
+        const totalQuestions = <?= $qk->num_rows; ?>;
 
         $(document).ready(function() {
             generateButtons(totalQuestions);
+            refreshAnsweredQuestions();
         });
+
+        function refreshAnsweredQuestions() {
+            $.ajax({
+                url: '<?= url("/siswa/do-dtlkuis.php") ?>',
+                type: 'GET',
+                success: function(data, textStatus, xhr) {
+                    let result = JSON.parse(data);
+
+                    // Update answeredQuestions based on session data
+                    answeredQuestions = result.jawab || {};
+
+                    // Update the UI based on answeredQuestions
+                    for (let questionNumber in answeredQuestions) {
+                        if (answeredQuestions.hasOwnProperty(questionNumber)) {
+                            const $buttons = $(`.question-buttons button[data-question="${questionNumber}"]`);
+                            if (answeredQuestions[questionNumber]) {
+                                $buttons.addClass('btn-success').prop('disabled', true);
+                            } else {
+                                $buttons.addClass('btn-danger').prop('disabled', true);
+                            }
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
 
         function generateButtons(total) {
             $('.question-buttons').each(function() {
@@ -190,25 +209,29 @@
             });
         }
 
-        function checkAnswer(questionNumber, selectedAnswer, correctAnswer) {
-            const $feedbackElement = $(`#feedback${questionNumber}`);
+        function checkAnswer(questionNumber, selectedAnswer) {
             const $buttons = $(`.question-buttons button[data-question="${questionNumber}"]`);
+            $.ajax({
+                url: '<?= url("/siswa/do-dtlkuis.php")?>',
+                type: 'POST',
+                data: {jawab: selectedAnswer, no:questionNumber},
+                success: function(data, textStatus, xhr) {
+                    let hasil = data;
+                    console.log(hasil);
+                    $buttons.removeClass('btn-primary btn-success btn-danger');
+                    if (hasil['hasil']) {
+                        $buttons.addClass('btn-success').prop('disabled', true);
+                    } else {
+                        $buttons.addClass('btn-danger').prop('disabled', true);
+                    }
 
-            $buttons.removeClass('btn-primary btn-success btn-danger');
-
-            if (selectedAnswer === correctAnswer) {
-                $feedbackElement.text("Jawaban benar!").css('color', 'green');
-
-                $buttons.addClass('btn-success').prop('disabled', true);
-            } else {
-                $feedbackElement.text("Jawaban salah. Coba lagi!").css('color', 'red');
-
-                $buttons.addClass('btn-danger').prop('disabled', true);
-            }
-
-            answeredQuestions[questionNumber] = true;
-            console.log(answeredQuestions);
-            checkAllAnswered();
+                    answeredQuestions = result.jawab;
+                    checkAllAnswered();
+                            
+                },error: function(xhr, status, error) {
+                     console.log(error);
+                }
+            });
         }
 
         function showQuestion(questionNumber) {

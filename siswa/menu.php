@@ -119,7 +119,7 @@ if ($result->num_rows > 0) {
           <div class="collapse" id="quizDropdown">
             <ul class="nav nav-collapse">
               <?php 
-              $qu = $conn->query("SELECT tm.nm_mapel, tm.id_mapel, tk.mulai, tk.selesai FROM tbsiswa ts, tbmapeldtl tmd, tbkuis tk, tbmapel tm WHERE ts.id_user = '$id_siswa' AND ts.id_kelas = tmd.id_kelas AND tmd.id_mapel = tm.id_mapel AND tm.tahun_ajaran = ts.tahun_ajaran AND tk.id_mapel_dtl = tmd.id_mapel_dtl");
+              $qu = $conn->query("SELECT tm.nm_mapel, tk.id_kuis, tk.mulai, tk.selesai FROM tbsiswa ts, tbmapeldtl tmd, tbkuis tk, tbmapel tm WHERE ts.id_user = '$id_siswa' AND ts.id_kelas = tmd.id_kelas AND tmd.id_mapel = tm.id_mapel AND tm.tahun_ajaran = ts.tahun_ajaran AND tk.id_mapel_dtl = tmd.id_mapel_dtl");
 
               while ($dkuis = $qu->fetch_assoc()){
                 $m = explode(' ', $dkuis['mulai']);
@@ -144,7 +144,7 @@ if ($result->num_rows > 0) {
                 }
               ?>
               <li>
-                <a href="<?= url('/siswa/kuis.php?id='.$dkuis['id_mapel']); ?>">
+                <a href="<?= url('/siswa/kuis.php?id='.$dkuis['id_kuis']); ?>">
                   <span class="sub-item"><?= $dkuis['nm_mapel']; ?></span>
                 </a>
               </li>
