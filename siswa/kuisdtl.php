@@ -90,6 +90,9 @@
             if(isset($_POST['mulai']) && isset($_GET['id'])){
                 $id_kuis = $_GET['id'];
                 $_SESSION['jawab'] = ['id' => $id_kuis, 'jawab' => []];
+                echo '<script type="text/javascript">';
+                echo 'window.location.href="'.url("/siswa/kuisdtl.php?id=".$_SESSION['jawab']['id']).'";';
+                echo '</script>';
             }else if(isset($_SESSION['jawab']) && !isset($_GET['id']) || $_GET['id'] == null){
                 echo '<script type="text/javascript">';
                 echo 'window.location.href="'.url("/siswa/kuisdtl.php?id=".$_SESSION['jawab']['id']).'";';
@@ -105,18 +108,18 @@
                     $i = 1;
                     while($dk = $qk->fetch_assoc()){
                 ?>
-                <div id="question<?= $dk['no']; ?>" class="question-container <?= ($i++ == 1)? 'active': ''; ?>">
+                <div id="question<?= $dk['no']; ?>" class="question-container <?= ($i == 1)? 'active': ''; ?>">
                     <div class="d-flex">
                         <div class="flex-grow-1">
                             <h5 class="fw-bold"><?= $dk['no'].". ".$dk['soal']; ?></h5>
                             <div>
-                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban1" value="<?= $dk['a']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['a']; ?>')">
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban1" name="jawab<?= $dk['no']; ?>" value="<?= $dk['a']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, 'A')" <?php if(isset($_SESSION['jawab']['jawab'][$i])){ echo 'disabled '; if($_SESSION['jawab']['jawab'][$i] == 'A'){ echo ' checked'; }} ?> >
                                 <label for="soal<?= $dk['no']; ?>_jawaban1"><?= $dk['a']; ?></label><br>
-                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban2" value="<?= $dk['b']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['b']; ?>')">
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban2" name="jawab<?= $dk['no']; ?>" value="<?= $dk['b']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, 'B')" <?php if(isset($_SESSION['jawab']['jawab'][$i])){ echo 'disabled '; if($_SESSION['jawab']['jawab'][$i] == 'B'){ echo ' checked'; }} ?> >
                                 <label for="soal<?= $dk['no']; ?>_jawaban2"><?= $dk['b']; ?></label><br>
-                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban3" value="<?= $dk['c']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['c']; ?>')">
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban3" name="jawab<?= $dk['no']; ?>" value="<?= $dk['c']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, 'C')" <?php if(isset($_SESSION['jawab']['jawab'][$i])){ echo 'disabled '; if($_SESSION['jawab']['jawab'][$i] == 'C'){ echo ' checked'; }} ?>>
                                 <label for="soal<?= $dk['no']; ?>_jawaban3"><?= $dk['c']; ?></label><br>
-                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban4" value="<?= $dk['d']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, '<?= $dk['d']; ?>')">
+                                <input type="radio" id="soal<?= $dk['no']; ?>_jawaban4" name="jawab<?= $dk['no']; ?>" value="<?= $dk['d']; ?>" onclick="checkAnswer(<?= $dk['no']; ?>, 'D')" <?php if(isset($_SESSION['jawab']['jawab'][$i])){ echo 'disabled '; if($_SESSION['jawab']['jawab'][$i] == 'D'){ echo ' checked'; }} ?>>
                                 <label for="soal<?= $dk['no']; ?>_jawaban3"><?= $dk['d']; ?></label><br>
                             </div>
                         </div>
@@ -124,6 +127,7 @@
                     </div>
                 </div>
             <?php 
+                $i++;
                 }
             ?>
           </div>
@@ -180,6 +184,7 @@
                             }
                         }
                     }
+                    checkAllAnswered();
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
@@ -225,7 +230,7 @@
                         $buttons.addClass('btn-danger').prop('disabled', true);
                     }
 
-                    answeredQuestions = result.jawab;
+                    answeredQuestions[selectedAnswer] = selectedAnswer;
                     checkAllAnswered();
                             
                 },error: function(xhr, status, error) {
