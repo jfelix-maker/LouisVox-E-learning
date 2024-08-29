@@ -34,7 +34,7 @@
     <?php require '../config.php'; ?>
     <div class="wrapper">
        <?php
-        $menu = "index";
+        $menu = "Quiz";
         require 'menu.php';
        ?>
        
@@ -48,14 +48,25 @@
                             <p class="mb-4">
                                 Terima kasih telah menyelesaikan kuis! Berikut hasil Anda:
                             </p>
+                            <?php
+                            if(isset($_SESSION['jawab'])){
+
+                              $id_kuis = $_SESSION['jawab']['id'];
+                              $benar = count(array_filter($_SESSION['jawab']['soal'], function($value) {
+                                  return $value === true;
+                              }));
+                              $dtl = ($conn->query("SELECT * FROM `tbkuisdtl` WHERE id_kuis = '$id_kuis'"))->num_rows;
+                              $total = $benar * (100 / $dtl);
+                              unset($_SESSION['jawab']);
+                              // $conn->query("INSERT INTO `tbkuisjawab`(`id_kuis`, `id_siswa`, `nilai`) VALUES ('','[value-2]','[value-3]')");
+                            }
+                            ?>
                             <div class="alert alert-success" role="alert">
-                                Skor Anda: <strong>85/100</strong>
+                                Skor Anda: <strong><?= $total; ?>/100</strong>
                             </div>
                             <p class="mb-4">
                                 Anda telah menyelesaikan kuis ini dengan baik. 
-                            </p>
-                            <a href="index.php" class="btn btn-secondary">Kembali ke Halaman Utama</a>
-                            <a href="skor.php" class="btn btn-primary">Lihat Detail Skor</a>
+                          </p>
                         </div>
                     </div>
                 </div>

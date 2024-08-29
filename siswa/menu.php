@@ -122,6 +122,8 @@ if ($result->num_rows > 0) {
               $qu = $conn->query("SELECT tm.nm_mapel, tk.id_kuis, tk.mulai, tk.selesai FROM tbsiswa ts, tbmapeldtl tmd, tbkuis tk, tbmapel tm WHERE ts.id_user = '$id_siswa' AND ts.id_kelas = tmd.id_kelas AND tmd.id_mapel = tm.id_mapel AND tm.tahun_ajaran = ts.tahun_ajaran AND tk.id_mapel_dtl = tmd.id_mapel_dtl");
 
               while ($dkuis = $qu->fetch_assoc()){
+                $idKuis = $dkuis['id_kuis'];
+                $jbs = ($conn->query("SELECT * FROM `tbkuisjawab` WHERE tbkuisjawab.id_siswa = '$id_siswa' AND id_kuis = '$idKuis'"))->num_rows;
                 $m = explode(' ', $dkuis['mulai']);
                 $s = explode(' ', $dkuis['selesai']);
                 $m_date = intval(str_replace('-', '', $m[0]));
@@ -139,7 +141,7 @@ if ($result->num_rows > 0) {
                 if ($s_time === 0) {
                   $s_time = 2400;
                 }              
-                if (($m_date == $current_date && $m_time > $current_time) || ($m_date > $current_date) || ($s_date < $current_date) || ($s_date == $current_date && $s_time <= $current_time)) {
+                if (($m_date == $current_date && $m_time > $current_time) || ($m_date > $current_date) || ($s_date < $current_date) || ($s_date == $current_date && $s_time <= $current_time) || $jbs != 0) {
                   continue;
                 }
               ?>

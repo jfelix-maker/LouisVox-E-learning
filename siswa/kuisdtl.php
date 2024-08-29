@@ -89,7 +89,7 @@
             <?php
             if(isset($_POST['mulai']) && isset($_GET['id'])){
                 $id_kuis = $_GET['id'];
-                $_SESSION['jawab'] = ['id' => $id_kuis, 'jawab' => []];
+                $_SESSION['jawab'] = ['id' => $id_kuis, 'jawab' => [], 'soal' => []];
                 echo '<script type="text/javascript">';
                 echo 'window.location.href="'.url("/siswa/kuisdtl.php?id=".$_SESSION['jawab']['id']).'";';
                 echo '</script>';
@@ -99,7 +99,7 @@
                 echo '</script>';
             }
             $jawab = $_SESSION['jawab'];
-            var_dump($jawab['jawab']);
+            var_dump($jawab['soal']);
             $id_kuis = $_GET['id'];
             ?>
             <div class="row">
@@ -161,6 +161,7 @@
         $(document).ready(function() {
             generateButtons(totalQuestions);
             refreshAnsweredQuestions();
+            checkAllAnswered();
         });
 
         function refreshAnsweredQuestions() {
@@ -191,7 +192,36 @@
                 }
             });
         }
-
+        function checkAnswer(questionNumber, selectedAnswer) {
+            const $buttons = $(`.question-buttons button[data-question="${questionNumber}"]`);
+            answeredQuestions[selectedAnswer] = selectedAnswer;
+            checkAllAnswered();
+            for (let i = 1; i <= 4; i++) {
+                $(`#soal${questionNumber}_jawaban${i}`).prop('disabled', true);
+            }
+            $.ajax({
+                url: '<?= url("/siswa/do-dtlkuis.php")?>',
+                type: 'POST',
+                data: {jawab: selectedAnswer, no:questionNumber},
+                success: function(data, textStatus, xhr) {
+                    let hasil = data;
+                    console.log(hasil);
+                    $buttons.removeClass('btn-primary btn-success btn-danger');
+                    if (hasil['hasil']) {
+                        $buttons.addClass('btn-success').prop('disabled', true);
+                    } else {
+                        $buttons.addClass('btn-danger').prop('disabled', true);
+                    }
+                },error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        function checkAllAnswered() {
+            if (Object.keys(answeredQuestions).length === totalQuestions) {
+                $('#finish-button').show();
+            }
+        }
         function generateButtons(total) {
             $('.question-buttons').each(function() {
                 $(this).empty();
@@ -213,32 +243,6 @@
                 }
             });
         }
-
-        function checkAnswer(questionNumber, selectedAnswer) {
-            const $buttons = $(`.question-buttons button[data-question="${questionNumber}"]`);
-            $.ajax({
-                url: '<?= url("/siswa/do-dtlkuis.php")?>',
-                type: 'POST',
-                data: {jawab: selectedAnswer, no:questionNumber},
-                success: function(data, textStatus, xhr) {
-                    let hasil = data;
-                    console.log(hasil);
-                    $buttons.removeClass('btn-primary btn-success btn-danger');
-                    if (hasil['hasil']) {
-                        $buttons.addClass('btn-success').prop('disabled', true);
-                    } else {
-                        $buttons.addClass('btn-danger').prop('disabled', true);
-                    }
-
-                    answeredQuestions[selectedAnswer] = selectedAnswer;
-                    checkAllAnswered();
-                            
-                },error: function(xhr, status, error) {
-                     console.log(error);
-                }
-            });
-        }
-
         function showQuestion(questionNumber) {
             $('.question-container').removeClass('active');
             $(`#question${questionNumber}`).addClass('active');
@@ -251,16 +255,27 @@
                 });
             }
         }
-        function checkAllAnswered() {
-            if (Object.keys(answeredQuestions).length === totalQuestions) {
-                $('#finish-button').show();
-            }
-        }
-
         function finishQuiz() {
             const confirmFinish = confirm("Apakah Anda yakin semua jawaban sudah benar? Klik 'OK' untuk menyelesaikan kuis atau 'Cancel' untuk kembali memeriksa jawaban Anda.");
 
             if (confirmFinish) {
+                $.ajax({
+                    url: '<?= url("/siswa/do-dtlkuis.php")?>',
+                    type: 'GET',
+                    data: JSON.stringify({jawab: selectedAnswer, no:questionNumber}),
+                    success: function(data, textStatus, xhr) {
+                        let hasil = data;
+                        console.log(hasil);
+                        $buttons.removeClass('btn-primary btn-success btn-danger');
+                        if (hasil['hasil']) {
+                            $buttons.addClass('btn-success').prop('disabled', true);
+                        } else {
+                            $buttons.addClass('btn-danger').prop('disabled', true);
+                        }
+                    },error: function(xhr, status, error) {
+                        console.log(error);
+                    }
+                });
                 window.location.href = 'kuisselesai.php';
             }
         }
