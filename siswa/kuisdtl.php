@@ -260,22 +260,15 @@
             if (confirmFinish) {
                 $.ajax({
                     url: '<?= url("/siswa/do-dtlkuis.php")?>',
-                    type: 'GET',
-                    data: JSON.stringify({jawab: selectedAnswer, no:questionNumber}),
+                    type: 'PUT',
+                    data: "",
                     success: function(data, textStatus, xhr) {
-                        let hasil = data;
-                        console.log(hasil);
-                        $buttons.removeClass('btn-primary btn-success btn-danger');
-                        if (hasil['hasil']) {
-                            $buttons.addClass('btn-success').prop('disabled', true);
-                        } else {
-                            $buttons.addClass('btn-danger').prop('disabled', true);
-                        }
+                        console.log(data);
+                        window.location.href = '<?= url('/siswa/kuisselesai.php'); ?>';
                     },error: function(xhr, status, error) {
                         console.log(error);
                     }
                 });
-                window.location.href = 'kuisselesai.php';
             }
         }
 

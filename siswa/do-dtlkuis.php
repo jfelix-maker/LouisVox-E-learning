@@ -2,9 +2,9 @@
 require '../config.php';
 session_start();
 $id_guru = $_SESSION['uid'];
+$id_siswa = $_SESSION['uid'];
+$id_kuis = $_SESSION['jawab']['id'];
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_siswa = $_SESSION['uid'];
-    $id_kuis = $_SESSION['jawab']['id'];
     if($_SESSION['level'] == 3 && isset($_SESSION['jawab'])){
       
       $jawab = $_SESSION['jawab']['jawab'];
@@ -53,13 +53,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
   echo json_encode(['jawab' => $jawab['jawab']]);
 }else if($_SERVER['REQUEST_METHOD'] === 'PUT'){
   if($_SESSION['level'] == 3 && isset($_SESSION['jawab'])){
-    $id_kuis = $_SESSION['jawab']['id'];
     $benar = count(array_filter($_SESSION['jawab']['soal'], function($value) {
       return $value === true;
     }));
     $dtl = ($conn->query("SELECT * FROM `tbkuisdtl` WHERE id_kuis = '$id_kuis'"))->num_rows;
     $total = $benar * (100 / $dtl);
-    $conn->query("INSERT INTO `tbkuisjawab`(`id_kuis`, `id_siswa`, `nilai`) VALUES ('','[value-2]','[value-3]')");
+    $conn->query("INSERT INTO `tbkuisjawab`(`id_kuis`, `id_siswa`, `nilai`) VALUES ('$id_kuis','$id_siswa','$total')");
   }else{
     http_response_code(400);
   }
