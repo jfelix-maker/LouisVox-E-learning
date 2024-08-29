@@ -61,7 +61,6 @@
             cursor: not-allowed;
         }
         #finish-button {
-            display: none;
             margin-top: 20px;
             text-align: center;
         }
