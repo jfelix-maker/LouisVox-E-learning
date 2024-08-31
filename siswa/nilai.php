@@ -39,42 +39,6 @@
                 <h3 class="fw-bold mb-3">Penilaian Mata Pelajaran</h3>
               </div>
             </div>
-            <div class="filters mb-3">
-              <div class="row">
-                <div class="col-md-4">
-                  <label for="filter-subject">Mata Pelajaran</label>
-                  <select id="filter-subject" class="form-control">
-                    <option value="">Semua</option>
-                    <option value="Matematika">Matematika</option>
-                    <option value="Ilmu Pengetahuan Alam">Ilmu Pengetahuan Alam</option>
-                    <option value="Sejarah">Sejarah</option>
-                    <option value="Geografi">Geografi</option>
-                    <option value="Bahasa Inggris">Bahasa Inggris</option>
-                    <option value="Ekonomi">Ekonomi</option>
-                    <option value="Biologi">Biologi</option>
-                    <option value="Fisika">Fisika</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="filter-category">Kategori</label>
-                  <select id="filter-category" class="form-control">
-                    <option value="">Semua</option>
-                    <option value="Tugas">Tugas</option>
-                    <option value="Kuis">Kuis</option>
-                    <option value="Ujian">Ujian</option>
-                  </select>
-                </div>
-                <div class="col-md-4">
-                  <label for="filter-year">Tahun</label>
-                  <select id="filter-year" class="form-control">
-                    <option value="">Semua</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                  </select>
-                </div>
-              </div>
-            </div>
             <div class="row">
               <div class="col-md-12">
                 <div class="card">
@@ -86,207 +50,67 @@
                       <table id="assessment-datatables" class="display table table-striped table-hover">
                         <thead>
                           <tr>
+                            <th>Nama Tugas/Kuis</th>
                             <th>Mata Pelajaran</th>
-                            <th>Kategori</th>
                             <th>Nilai</th>
                             <th>Tanggal</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <!-- Data Contoh -->
+                          <?php
+                            $qt = $conn->query("SELECT 
+                            ttd.nm_tugas, 
+                            tm.nm_mapel, 
+                            COALESCE(ttj.nilai, 0) AS nilai, 
+                            ttd.mulai as tgl 
+                            FROM tbsiswa ts
+                            INNER JOIN tbmapel tm ON ts.tahun_ajaran = tm.tahun_ajaran
+                            INNER JOIN tbmapeldtl tmd ON  tm.id_mapel = tmd.id_mapel
+                            INNER JOIN tbtugas tt ON tt.id_mapel_dtl = tmd.id_mapel_dtl
+                            INNER JOIN tbtugasdtl ttd ON tt.id_tugas = ttd.id_tugas
+                            LEFT JOIN tbtugasjawab ttj ON tt.id_tugas = ttj.id_tugas
+                            WHERE
+                            ts.id_user = '$id_siswa'
+                            AND tmd.id_kelas = ts.id_kelas;");
+                            while($dt = $qt->fetch_assoc()){
+                              $dtgl = substr_replace(tanggal($dt['tgl']) ,"", -5);
+                          ?>
                           <tr>
-                            <td>Matematika</td>
-                            <td>Tugas</td>
-                            <td>85</td>
-                            <td>2024/08/01</td>
+                            <td><?= $dt['nm_tugas']; ?></td>
+                            <td><?= $dt['nm_mapel']; ?></td>
+                            <td><?= $dt['nilai']; ?></td>
+                            <td><?= $dtgl; ?></td>
                           </tr>
+                        <?php
+                            }
+                        ?>
+                         <?php
+                            $qk = $conn->query("SELECT 
+                            tk.nm_kuis, 
+                            tm.nm_mapel, 
+                            COALESCE(tkj.nilai, 0) AS nilai, 
+                            tk.mulai as tgl 
+                            FROM
+                            tbsiswa ts
+                            INNER JOIN tbmapel tm ON ts.tahun_ajaran = tm.tahun_ajaran
+                            INNER JOIN tbmapeldtl tmd ON  tm.id_mapel = tmd.id_mapel
+                            INNER JOIN tbkuis tk ON tk.id_mapel_dtl = tmd.id_mapel_dtl
+                            LEFT JOIN tbkuisjawab tkj ON tk.id_kuis = tkj.id_kuis
+                            WHERE
+                            ts.id_user = '$id_siswa'
+                            AND tmd.id_kelas = ts.id_kelas;");
+                            while($dk = $qk->fetch_assoc()){
+                              $dtgl = substr_replace(tanggal($dk['tgl']) ,"", -5);
+                          ?>
                           <tr>
-                            <td>Ilmu Pengetahuan Alam</td>
-                            <td>Kuis</td>
-                            <td>90</td>
-                            <td>2024/08/02</td>
+                            <td><?= $dk['nm_kuis']; ?></td>
+                            <td><?= $dk['nm_mapel']; ?></td>
+                            <td><?= $dk['nilai']; ?></td>
+                            <td><?= $dtgl; ?></td>
                           </tr>
-                          <tr>
-                            <td>Sejarah</td>
-                            <td>Ujian</td>
-                            <td>78</td>
-                            <td>2024/08/03</td>
-                          </tr>
-                          <tr>
-                            <td>Geografi</td>
-                            <td>Tugas</td>
-                            <td>88</td>
-                            <td>2024/08/04</td>
-                          </tr>
-                          <tr>
-                            <td>Bahasa Inggris</td>
-                            <td>Kuis</td>
-                            <td>92</td>
-                            <td>2024/08/05</td>
-                          </tr>
-                          <tr>
-                            <td>Ekonomi</td>
-                            <td>Tugas</td>
-                            <td>80</td>
-                            <td>2024/08/06</td>
-                          </tr>
-                          <tr>
-                            <td>Biologi</td>
-                            <td>Kuis</td>
-                            <td>85</td>
-                            <td>2024/08/07</td>
-                          </tr>
-                          <tr>
-                            <td>Fisika</td>
-                            <td>Ujian</td>
-                            <td>77</td>
-                            <td>2024/08/08</td>
-                          </tr>
-                          <!-- Data Tambahan -->
-                          <tr>
-                            <td>Matematika</td>
-                            <td>Kuis</td>
-                            <td>91</td>
-                            <td>2024/08/09</td>
-                          </tr>
-                          <tr>
-                            <td>Ilmu Pengetahuan Alam</td>
-                            <td>Tugas</td>
-                            <td>84</td>
-                            <td>2024/08/10</td>
-                          </tr>
-                          <tr>
-                            <td>Sejarah</td>
-                            <td>Kuis</td>
-                            <td>80</td>
-                            <td>2024/08/11</td>
-                          </tr>
-                          <tr>
-                            <td>Geografi</td>
-                            <td>Ujian</td>
-                            <td>89</td>
-                            <td>2024/08/12</td>
-                          </tr>
-                          <tr>
-                            <td>Bahasa Inggris</td>
-                            <td>Tugas</td>
-                            <td>87</td>
-                            <td>2024/08/13</td>
-                          </tr>
-                          <tr>
-                            <td>Ekonomi</td>
-                            <td>Kuis</td>
-                            <td>79</td>
-                            <td>2024/08/14</td>
-                          </tr>
-                          <tr>
-                            <td>Biologi</td>
-                            <td>Ujian</td>
-                            <td>86</td>
-                            <td>2024/08/15</td>
-                          </tr>
-                          <tr>
-                            <td>Fisika</td>
-                            <td>Tugas</td>
-                            <td>82</td>
-                            <td>2024/08/16</td>
-                          </tr>
-                          <tr>
-                            <td>Matematika</td>
-                            <td>Ujian</td>
-                            <td>90</td>
-                            <td>2024/08/17</td>
-                          </tr>
-                          <tr>
-                            <td>Ilmu Pengetahuan Alam</td>
-                            <td>Tugas</td>
-                            <td>88</td>
-                            <td>2024/08/18</td>
-                          </tr>
-                          <tr>
-                            <td>Sejarah</td>
-                            <td>Kuis</td>
-                            <td>85</td>
-                            <td>2024/08/19</td>
-                          </tr>
-                          <tr>
-                            <td>Geografi</td>
-                            <td>Ujian</td>
-                            <td>87</td>
-                            <td>2024/08/20</td>
-                          </tr>
-                          <tr>
-                            <td>Bahasa Inggris</td>
-                            <td>Tugas</td>
-                            <td>91</td>
-                            <td>2024/08/21</td>
-                          </tr>
-                          <tr>
-                            <td>Ekonomi</td>
-                            <td>Kuis</td>
-                            <td>84</td>
-                            <td>2024/08/22</td>
-                          </tr>
-                          <tr>
-                            <td>Biologi</td>
-                            <td>Ujian</td>
-                            <td>80</td>
-                            <td>2024/08/23</td>
-                          </tr>
-                          <tr>
-                            <td>Fisika</td>
-                            <td>Tugas</td>
-                            <td>87</td>
-                            <td>2024/08/24</td>
-                          </tr>
-                          <tr>
-                            <td>Matematika</td>
-                            <td>Kuis</td>
-                            <td>94</td>
-                            <td>2024/08/25</td>
-                          </tr>
-                          <tr>
-                            <td>Ilmu Pengetahuan Alam</td>
-                            <td>Ujian</td>
-                            <td>82</td>
-                            <td>2024/08/26</td>
-                          </tr>
-                          <tr>
-                            <td>Sejarah</td>
-                            <td>Tugas</td>
-                            <td>77</td>
-                            <td>2024/08/27</td>
-                          </tr>
-                          <tr>
-                            <td>Geografi</td>
-                            <td>Kuis</td>
-                            <td>86</td>
-                            <td>2024/08/28</td>
-                          </tr>
-                          <tr>
-                            <td>Bahasa Inggris</td>
-                            <td>Ujian</td>
-                            <td>92</td>
-                            <td>2024/08/29</td>
-                          </tr>
-                          <tr>
-                            <td>Ekonomi</td>
-                            <td>Tugas</td>
-                            <td>81</td>
-                            <td>2024/08/30</td>
-                          </tr>
-                          <tr>
-                            <td>Biologi</td>
-                            <td>Kuis</td>
-                            <td>89</td>
-                            <td>2024/08/31</td>
-                          </tr>
-                          <tr>
-                            <td>Fisika</td>
-                            <td>Ujian</td>
-                            <td>78</td>
-                            <td>2024/09/01</td>
-                          </tr>
+                        <?php
+                            }
+                        ?>
                         </tbody>
                       </table>
                     </div>
