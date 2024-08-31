@@ -75,11 +75,11 @@
                             while($dt = $qt->fetch_assoc()){
                               $dtgl = substr_replace(tanggal($dt['tgl']) ,"", -5);
                           ?>
-                          <tr>
-                            <td><?= $dt['nm_tugas']; ?></td>
-                            <td><?= $dt['nm_mapel']; ?></td>
-                            <td><?= $dt['nilai']; ?></td>
-                            <td><?= $dtgl; ?></td>
+                          <tr <?= ($env['KKM'] > $dt['nilai'])? "class='bg-light'": "";?>>
+                            <td <?= ($env['KKM'] > $dt['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dt['nm_tugas']; ?></td>
+                            <td <?= ($env['KKM'] > $dt['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dt['nm_mapel']; ?></td>
+                            <td <?= ($env['KKM'] > $dt['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dt['nilai']; ?></td>
+                            <td <?= ($env['KKM'] > $dt['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dtgl; ?></td>
                           </tr>
                         <?php
                             }
@@ -102,11 +102,11 @@
                             while($dk = $qk->fetch_assoc()){
                               $dtgl = substr_replace(tanggal($dk['tgl']) ,"", -5);
                           ?>
-                          <tr>
-                            <td><?= $dk['nm_kuis']; ?></td>
-                            <td><?= $dk['nm_mapel']; ?></td>
-                            <td><?= $dk['nilai']; ?></td>
-                            <td><?= $dtgl; ?></td>
+                          <tr <?= ($env['KKM'] > $dk['nilai'])? "class='bg-light'": "";?>>
+                              <td <?= ($env['KKM'] > $dk['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dk['nm_kuis']; ?></td>
+                              <td <?= ($env['KKM'] > $dk['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dk['nm_mapel']; ?></td>
+                              <td <?= ($env['KKM'] > $dk['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dk['nilai']; ?></td>
+                              <td <?= ($env['KKM'] > $dk['nilai'])? "class='text-danger fw-bold'": "";?>><?= $dtgl; ?></td>
                           </tr>
                         <?php
                             }
