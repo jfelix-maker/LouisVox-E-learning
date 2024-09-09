@@ -98,7 +98,6 @@
                 echo '</script>';
             }
             $jawab = $_SESSION['jawab'];
-            var_dump($jawab['soal']);
             $id_kuis = $_GET['id'];
             ?>
             <div class="row">

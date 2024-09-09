@@ -69,7 +69,7 @@
                   <div class="card shadow-sm border-0">
                     <div class="card-body p-4 text-center">
                       <div class="h1 m-0 text-primary">
-                        <i class="fas fa-tasks"></i> 1
+                        <i class="fas fa-tasks"></i> 
                       </div>
                       <div class="text-muted mb-3">
                         <strong>Tugas yang belum kamu kerjakan</strong>
@@ -79,33 +79,19 @@
                 </a>
               </div>
               <div class="col-12 col-sm-6 col-lg-4">
-                <a href="<?= url('/siswa/kuis.php'); ?>" class="text-decoration-none">
+                <div class="text-decoration-none">
                   <div class="card shadow-sm border-0">
                     <div class="card-body p-4 text-center">
                       <div class="h1 m-0 text-warning">
-                        <i class="fas fa-question-circle"></i> 2
+                        <i class="fas fa-question-circle"></i> 
                       </div>
                       <div class="text-muted mb-3">
                         <strong>Kuis yang belum kamu kerjakan</strong>
                       </div>
                     </div>
                   </div>
-                </a>
+    </div>
               </div>
-              <!-- <div class="col-12 col-sm-6 col-lg-4">
-                <a href="<?= url('/siswa/ujian.php'); ?>" class="text-decoration-none">
-                  <div class="card shadow-sm border-0">
-                    <div class="card-body p-4 text-center">
-                      <div class="h1 m-0 text-danger">
-                        <i class="fas fa-pencil-alt"></i> 7
-                      </div>
-                      <div class="text-muted mb-3">
-                        <strong>Ujian yang belum kamu kerjakan</strong>
-                      </div>
-                    </div>
-                  </div>
-                </a>
-              </div> -->
             </div>
 
           </div>
