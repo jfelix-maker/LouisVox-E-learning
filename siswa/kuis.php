@@ -37,8 +37,6 @@
         $menu = "Quiz";
         require 'menu.php';
        ?>
-
-       redesian ini aja nggak usah yang lain
         <div class="main-panel">
             <?php require 'header.php'; ?>
             <?php unset($_SESSION["jawab"]); ?>
