@@ -203,7 +203,7 @@
                           <th scope="col">Nama Kuis</th>
                           <th scope="col">Mulai</th>
                           <th scope="col">Selesai</th>
-                          <th scope="col" colspan="4">Aksi</th>
+                          <th scope="col" colspan="3">Aksi</th>
                         </tr>    
                     </thead>
                     <tbody>
@@ -218,7 +218,6 @@
                         <td><?= tanggal($data['mulai']); ?></td>
                         <td><?= tanggal($data['selesai']); ?></td>
                         <td><a href="<?= url("/guru/soal-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-info"> Soal</a></td>
-                        <td><a href="<?= url("/guru/nilai-kuis.php?kl=".$data['id_kuis']); ?>" class="btn btn-primary"> Nilai Siswa</a></td>
                         <td><a href="<?= url("/guru/kuis.php?kl=".$id."&dtl=".$data['id_kuis']); ?>" class="btn btn-warning"> Edit</a></td>
                         <td><button
                         type="button"
