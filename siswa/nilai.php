@@ -22,8 +22,7 @@
 
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
-    <link rel="stylesheet" href="../assets/css/demo.css" />
+    <link rel="stylesheet" href="../assets/css/main.min.css" />
   </head>
   <body>
     <?php require '../config.php'; ?>
@@ -153,7 +152,7 @@
     <!-- Sweet Alert -->
     <script src="../assets/js/plugin/sweetalert/sweetalert2-11.js"></script>
 
-    <!-- Kaiadmin JS -->
+    <!-- Custome JS -->
     <script src="../assets/js/main.min.js"></script>
 
     <script>
