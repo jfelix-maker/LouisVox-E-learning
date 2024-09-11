@@ -37,9 +37,6 @@
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../assets/css/plugins.min.css" />
     <link rel="stylesheet" href="../assets/css/kaiadmin.min.css" />
-
-    <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="../assets/css/demo.css" />
   </head>
   <body>
     <!-- read config -->
@@ -73,14 +70,14 @@
                     <i class="icon-home"></i>
                   </a>
                 </li>
-                <!-- <li class="separator">
-                  <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                  <a href="#">Forms</a>
-                </li> -->
               </ul>
             </div>
+            <?php
+            $tsiswa = ($conn->query("SELECT * FROM tbsiswa"))->num_rows;
+            $tkelas = ($conn->query("SELECT * FROM tbkelas"))->num_rows;
+            $tguru = ($conn->query("SELECT * FROM tbguru"))->num_rows;
+
+            ?>
               <div class="ms-md-auto py-2 py-md-0">
                <!-- align right -->
               </div>
@@ -100,7 +97,7 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Kelas</p>
-                          <h4 class="card-title">1,294</h4>
+                          <h4 class="card-title"><?= $tkelas; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -121,7 +118,7 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Guru</p>
-                          <h4 class="card-title">1303</h4>
+                          <h4 class="card-title"><?= $tguru; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -142,7 +139,7 @@
                       <div class="col col-stats ms-3 ms-sm-0">
                         <div class="numbers">
                           <p class="card-category">Siswa</p>
-                          <h4 class="card-title">1,345</h4>
+                          <h4 class="card-title"><?= $tsiswa; ?></h4>
                         </div>
                       </div>
                     </div>
@@ -184,7 +181,7 @@
     <!-- Sweet Alert -->
     <script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
-    <!-- Kaiadmin JS -->
+    <!--Custome JS -->
     <script src="../assets/js/main.min.js"></script>
   </body>
 </html>
