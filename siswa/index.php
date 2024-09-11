@@ -63,30 +63,35 @@
               <div class="ms-md-auto py-2 py-md-0">
               </div>
             </div>
+            <?php
+                  $current_time = new DateTime();
+                  $current_time = $current_time->format("Y-m-d H:i");
+                  $ttugas = ($conn->query("SELECT * FROM `tbtugasdtl` ttd WHERE STR_TO_DATE(ttd.mulai, '%Y-%m-%d %H:%i') < STR_TO_DATE('$current_time', '%Y-%m-%d %H:%i') AND STR_TO_DATE(ttd.selesai, '%Y-%m-%d %H:%i') > STR_TO_DATE('$current_time', '%Y-%m-%d %H:%i');"))->num_rows;
+            ?>
             <div class="row">
               <div class="col-12 col-sm-6 col-lg-4">
-                <a href="<?= url('/siswa/tugas.php'); ?>" class="text-decoration-none">
+                <div class="text-decoration-none">
                   <div class="card shadow-sm border-0">
                     <div class="card-body p-4 text-center">
                       <div class="h1 m-0 text-primary">
-                        <i class="fas fa-tasks"></i> 
+                        <i class="fas fa-tasks"></i> <?= $ttugas; ?>
                       </div>
                       <div class="text-muted mb-3">
                         <strong>Tugas yang belum kamu kerjakan</strong>
                       </div>
                     </div>
                   </div>
-                </a>
+                </div>
               </div>
               <div class="col-12 col-sm-6 col-lg-4">
                 <div class="text-decoration-none">
                   <div class="card shadow-sm border-0">
                     <div class="card-body p-4 text-center">
                       <div class="h1 m-0 text-warning">
-                        <i class="fas fa-question-circle"></i> 
+                        <i class="fas fa-question-circle"></i> <?= $tkuis; ?> 
                       </div>
                       <div class="text-muted mb-3">
-                        <strong>Kuis yang belum kamu kerjakan</strong>
+                        <strong>Kuis yang belum kamu kerjakan </strong>
                       </div>
                     </div>
                   </div>

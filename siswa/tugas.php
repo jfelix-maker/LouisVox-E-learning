@@ -73,16 +73,20 @@
 
       <div class="main-panel">
         <?php require 'header.php'; ?>
+        <?php
+          $dtl = (isset($_GET['id'])) ? $_GET['id'] : 0;
+          $nmtugas = ($conn->query("SELECT tm.nm_mapel FROM tbmapel tm, tbmapeldtl tmd WHERE tm.id_mapel = tmd.id_mapel AND tmd.id_mapel_dtl = '$dtl' LIMIT 1"))->fetch_assoc();
+          var_dump($nmtugas);
+        ?>
         <div class="container">
           <div class="page-inner">
             <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
               <div class="page-header">
-                <h3 class="fw-bold mb-3">Tugas</h3>
+                <h3 class="fw-bold mb-3">Tugas <?= $nmtugas['nm_mapel']; ?></h3>
               </div>
             </div>
 
             <?php
-              $dtl = (isset($_GET['id'])) ? $_GET['id'] : 0;
               $qu = $conn->query("SELECT * FROM tbtugas tt, tbtugasdtl ttd WHERE tt.id_tugas = ttd.id_tugas AND tt.id_mapel_dtl = '$dtl'");
               
               while($data = $qu->fetch_assoc()){

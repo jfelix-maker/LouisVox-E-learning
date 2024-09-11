@@ -120,7 +120,7 @@ if ($result->num_rows > 0) {
             <ul class="nav nav-collapse">
               <?php 
               $qu = $conn->query("SELECT tm.nm_mapel, tk.id_kuis, tk.mulai, tk.selesai FROM tbsiswa ts, tbmapeldtl tmd, tbkuis tk, tbmapel tm WHERE ts.id_user = '$id_siswa' AND ts.id_kelas = tmd.id_kelas AND tmd.id_mapel = tm.id_mapel AND tm.tahun_ajaran = ts.tahun_ajaran AND tk.id_mapel_dtl = tmd.id_mapel_dtl");
-
+              $tkuis = 0;
               while ($dkuis = $qu->fetch_assoc()){
                 $idKuis = $dkuis['id_kuis'];
                 $jbs = ($conn->query("SELECT * FROM `tbkuisjawab` WHERE tbkuisjawab.id_siswa = '$id_siswa' AND id_kuis = '$idKuis'"))->num_rows;
@@ -144,6 +144,7 @@ if ($result->num_rows > 0) {
                 if (($m_date == $current_date && $m_time > $current_time) || ($m_date > $current_date) || ($s_date < $current_date) || ($s_date == $current_date && $s_time <= $current_time) || $jbs != 0) {
                   continue;
                 }
+                $tkuis ++;
               ?>
               <li>
                 <a href="<?= url('/siswa/kuis.php?id='.$dkuis['id_kuis']); ?>">
@@ -154,24 +155,6 @@ if ($result->num_rows > 0) {
             </ul>
           </div>
         </li>
-        <!-- <li class="nav-item <?= ($menu == 'Ujian') ? 'active' : ''; ?>">
-          <a data-bs-toggle="collapse" href="#ujianDropdown" aria-expanded="false" aria-controls="ujianDropdown">
-            <i class="fas fa-pencil-alt"></i>
-            <p>Ujian</p>
-            <span class="caret"></span>
-          </a>
-          <div class="collapse" id="ujianDropdown">
-            <ul class="nav nav-collapse">
-              <?php foreach ($mapelArray as $index => $mapel): ?>
-              <li>
-                <a href="<?= url('/siswa/ujian.php'); ?>">
-                  <span class="sub-item"><?= $mapel; ?></span>
-                </a>
-              </li>
-              <?php endforeach; ?>
-            </ul>
-          </div>
-        </li> -->
         <li class="nav-item <?= ($menu == 'Nilai') ? 'active' : ''; ?>">
           <a href="<?= url('/siswa/nilai.php'); ?>">
             <i class="fas fa-chart-bar"></i>
