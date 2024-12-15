@@ -9,7 +9,7 @@
     />
     <link
       rel="icon"
-      href="../assets/img/sekolah/favicon.ico"
+      href="../assets/img/sekolah/logo-sinlui.png"
       type="image/x-icon"
     />
 

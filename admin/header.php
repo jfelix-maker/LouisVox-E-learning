@@ -4,7 +4,7 @@
             <div class="logo-header" data-background-color="dark">
               <a href="index.html" class="logo">
                 <img
-                  src="../assets/img/sekolah/logo.svg"
+                  src="../assets/img/sekolah/logo-sinlui.png"
                   alt="navbar brand"
                   class="navbar-brand"
                   height="20"

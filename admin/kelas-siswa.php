@@ -12,8 +12,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $conn->query("INSERT INTO tbuser (uid, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','3')");
-    $conn->query("INSERT INTO tbsiswa (`id_user`, `id_kelas`, `nm_siswa`, `masuk_tahun`, tahun_ajaran) VALUES ('$id_user','$id_kelas',' $nm_siswa','$tahun_masuk', '0')");
+    $conn->query("INSERT INTO tbuser (uid, `email`, `password`, `level`) VALUES ('$id_user','$username','$password','3')");
+    $conn->query("INSERT INTO tbsiswa (`id_user`, `id_kelas`, `nm_siswa`, `tahun_ajaran`, `masuk_tahun`) VALUES ('$id_user','$id_kelas',' $nm_siswa', '0','$tahun_masuk')");
     http_response_code(200);
     $response = "Berhasil menambah siswa";
   }

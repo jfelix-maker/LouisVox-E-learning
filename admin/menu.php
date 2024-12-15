@@ -13,7 +13,7 @@ if (!isset($_SESSION['user']) || $_SESSION['level'] != 1) {
           <div class="logo-header" data-background-color="dark">
             <a href="/admin/" class="logo">
               <img
-                src="../assets/img/sekolah/logo.svg"
+                src="../assets/img/sekolah/logo-sinlui.png"
                 alt="navbar brand"
                 class="navbar-brand"
                 height="70"

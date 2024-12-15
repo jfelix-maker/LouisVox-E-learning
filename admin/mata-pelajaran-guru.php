@@ -136,7 +136,7 @@
                             <label>Kelas</label>
                             <select class="form-select" name="id_kelas">
                               <?php
-                              $qdk = $conn->query("SELECT * FROM tbkelas tbk, tbsiswa tbs WHERE tbk.id_kelas = tbs.id_kelas AND tbs.tahun_ajaran = '$ta' GROUP BY tbk.nm_kelas;");
+                              $qdk = $conn->query("SELECT * FROM tbkelas;");
                               while($dk = $qdk->fetch_assoc()){
                               ?>
                               <option value="<?= $dk['id_kelas']; ?>"><?= $dk['nm_kelas']; ?></option>
@@ -176,7 +176,7 @@
                             <label>Kelas</label>
                             <select class="form-select" name="id_kelas">
                               <?php
-                              $qdk = $conn->query("SELECT * FROM tbkelas tbk, tbsiswa tbs WHERE tbk.id_kelas = tbs.id_kelas AND tbs.tahun_ajaran = '$ta' GROUP BY tbk.nm_kelas;");
+                              $qdk = $conn->query("SELECT * FROM tbkelas;");
                               while($dk = $qdk->fetch_assoc()){
                               ?>
                               <option value="<?= $dk['id_kelas']; ?>" <?= ($dk['id_kelas'] == $raw['id_kelas']) ? 'selected' : ''; ?>><?= $dk['nm_kelas']; ?></option>
@@ -227,13 +227,7 @@
                       <td><?= $data['nm_kelas']; ?></td>
                       <td><a href="<?= url("/admin/mata-pelajaran-guru.php?id=".$id."&dtl=".$data['id_mapel_dtl']); ?>" class="btn btn-warning">Edit</a></td>
                       <td> 
-                        <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="del-mapel"
-                        data-id="<?= $data['id_mapel_dtl']; ?>">
-                          Delete
-                        </button>
+                      <button id="del-mapel-guru" class="btn btn-danger" data-id="<?= $data['id_mapel-guru']; ?>"><?= $env['STR_SUBJECT_DELETE_GURU'] ?></button>
                       </td>
                     </tr>
                   <?php

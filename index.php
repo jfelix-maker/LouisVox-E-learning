@@ -1,6 +1,8 @@
 <?php
 session_start();
+require_once "config.php";
 
+// Jika pengguna sudah login, arahkan ke halaman sesuai level
 if (isset($_SESSION['user'])) {
     if ($_SESSION['level'] == 1) {
         header("Location: admin/index.php");
@@ -11,113 +13,129 @@ if (isset($_SESSION['user'])) {
     }
     exit;
 }
-require_once "config.php";
 
+// Proses login
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cEmail']) && isset($_POST['cPassword'])) {
-    $cemail = $_POST["cEmail"]; 
-    $cpassword = $_POST["cPassword"];
-
-    $query = $conn->query("SELECT uid, username, level FROM tbuser WHERE username = '$cemail' AND password = '$cpassword'");
+    $cemail = htmlspecialchars(trim($_POST["cEmail"])); // Trim white space from email string and convert chars into html entities
+    $cpassword = htmlspecialchars(trim($_POST["cPassword"])); // Do the same with password
     
-    if ($query->num_rows > 0) {
-        $result = $query->fetch_assoc();
-        $_SESSION['user'] = $cemail; 
-        $_SESSION['level'] = $result['level'];
-        $_SESSION['uid'] = $result['uid'];
-        
-        if ($_SESSION['level'] == 1) {
-            header("Location: admin/index.php");
-        } elseif ($_SESSION['level'] == 2) {
-            header("Location: guru/index.php");
-        } elseif ($_SESSION['level'] == 3) {
-            header("Location: siswa/index.php");
+    // Menggunakan prepared statement untuk keamanan dari SQL Injection
+    $stmt = $conn->prepare("SELECT * FROM tbuser WHERE email = ? AND password = ?;");
+    $stmt->bind_param("ss", $cemail, $cpassword);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Check if returned data row is above 0
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $_SESSION['user'] = $row['email'];
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['level'] = $row['level'];
+        $_SESSION['uid'] = $row['uid'];
+
+        // Arahkan ke halaman sesuai level
+        if ($_SESSION['level'] == 1) { // Admin
+            header("Location: /sekolah/admin/index.php");
+        } elseif ($_SESSION['level'] == 2) { // Guru
+            header("Location: /sekolah/guru/index.php");
+        } elseif ($_SESSION['level'] == 3) { // Siswa
+            header("Location: /sekolah/siswa/index.php");
         }
         exit;
     } else {
         $error_message = 'Email atau password salah';
     }
+
+    $stmt->close();
 }
 
-mysqli_close($conn);
+$conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="./assets/img/sekolah/favicon_web.ico" type="image/x-icon"/>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-title {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .login-form .form-control {
+            border-radius: 30px;
+            padding: 10px 20px;
+        }
+        .login-form .btn {
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .alert {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .login-footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="limiter">
-        <div class="container-login100">
-            <div class="wrap-login100">
-                <div class="login100-pic js-tilt" data-tilt>
-                    <img src="images/img-01.png" alt="IMG">
-                </div>
-
-                <form class="login100-form validate-form" action="" method="POST">
-                    <span class="login100-form-title">Member Login</span>
-
-                    <?php if (isset($error_message)): ?>
-                        <div class="alert alert-danger" role="alert">
-                            <?php echo htmlspecialchars($error_message); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
-                        <input class="input100" type="text" name="cEmail" placeholder="Email" required>
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <div class="wrap-input100 validate-input" data-validate="Password is required">
-                        <input class="input100" type="password" name="cPassword" placeholder="Password" required>
-                        <span class="focus-input100"></span>
-                        <span class="symbol-input100">
-                            <i class="fa fa-lock" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <div class="container-login100-form-btn">
-                        <button class="login100-form-btn">Login</button>
-                    </div>
-
-                    <div class="text-center p-t-12">
-                        <!-- <span class="txt1">Forgot</span> -->
-                        <!-- <a class="txt2" href="#">Username / Password?</a> -->
-                    </div>
-
-                    <div class="text-center p-t-136">
-                        <a class="txt2" href="#">
-                            <!-- Create your Account -->
-                            <!-- <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i> -->
-                        </a>
-                    </div>
-                </form>
+    <div class="login-container">
+        <h2 class="login-title">Login</h2>
+        <?php if (isset($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($error_message); ?>
             </div>
+        <?php endif; ?>
+        <form class="login-form" action="" method="POST">
+            <div class="mb-3">
+                <input type="text" name="cEmail" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="mb-3">
+                <input type="password" name="cPassword" class="form-control" placeholder="Password" required>
+            </div>
+            <div class="mb-3" style="text-align: center;">
+                <a href="forgot-password.php">Lupa kata sandi</a>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+        <div class="login-footer">
+            Belum punya akun? Silahkan Hubungi <a href="https://api.whatsapp.com/send?phone=6281297006284">Admin</a> Database Sekolah! 
         </div>
+       
     </div>
 
-    <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="vendor/bootstrap/js/popper.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="vendor/select2/select2.min.js"></script>
-    <script src="vendor/tilt/tilt.jquery.min.js"></script>
-    <script>
-        $('.js-tilt').tilt({
-            scale: 1.1
-        })
-    </script>
-    <script src="js/main.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

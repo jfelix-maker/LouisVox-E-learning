@@ -14,7 +14,7 @@ $id_guru = $_SESSION['uid'];
           <div class="logo-header" data-background-color="dark">
             <a href="/admin/" class="logo">
               <img
-                src="../assets/img/sekolah/logo.svg"
+                src="../assets/img/sekolah/logo-sinlui.png"
                 alt="navbar brand"
                 class="navbar-brand"
                 height="70"
@@ -38,7 +38,7 @@ $id_guru = $_SESSION['uid'];
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item <?= ($menu == "index") ? "active" : ""; ?>">
-                <a href="<?= url("/guru/"); ?>">
+                <a href="<?= url("/guru"); ?>">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                 </a>
@@ -57,10 +57,16 @@ $id_guru = $_SESSION['uid'];
                 </a>
                 <div class="collapse" id="kelas">
                   <ul class="nav nav-collapse">
+                    <?= $_SESSION['id_kelas'] ?> 
                     <?php
                     $id_guru = $_SESSION['uid'];
                     $qgk = $conn->query("SELECT * FROM tbmapeldtl tmd, tbkelas tk WHERE tmd.id_guru = '$id_guru' AND tk.id_kelas = tmd.id_kelas GROUP BY tk.nm_kelas;");
                     while($dgk = $qgk->fetch_assoc()){
+                    ?>
+                    <?php
+                    $kelas = $_SESSION['kelas'];
+                    $pel = $conn->query("SELECT * FROM tbkelas WHERE id_kelas = '$kelas'");
+
                     ?>
                     <li>
                       <a href="<?= url("/guru/kelas.php?kl=".$dgk['id_kelas']); ?>">

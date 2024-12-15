@@ -93,7 +93,7 @@
                       type="button"
                       class="btn btn-primary"
                       id="form-guru">
-                        Tambah Guru
+                        <?= $env['STR_ADD_TEACHER'] ?>
                       </button>
                       &nbsp;&nbsp;&nbsp;
                       <div class="input-group-prepend">
@@ -112,7 +112,7 @@
                         <th scope="col">Nama Guru</th>
                         <th scope="col">Tahun Masuk</th>
                         <th scope="col">Tahun Keluar</th>
-                        <th scope="col" colspan="3">Aksi</th>
+                        <th scope="col">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
@@ -131,36 +131,33 @@
                       <td><?= $data['nm_guru']; ?></td>
                       <td><?= $data['masuk_tahun']; ?></td>
                       <td><?= $data['keluar_tahun']; ?></td>
-                      <td> 
-                        <button
-                        type="button"
-                        class="btn btn-warning"
-                        id="edit-guru"
-                        data-id="<?= $data['id_user']; ?>"
-                        data-nm="<?= $data['nm_guru']; ?>"
-                        data-mt="<?= $data['masuk_tahun']; ?>"
-                        data-kt="<?= $data['keluar_tahun']; ?>">
-
-                          Edit
-                        </button>
-                      </td>
-                      <td> 
-                        <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="reset-guru"
-                        data-id="<?= $data['id_user']; ?>">
-                          Reset Password
-                        </button>
-                      </td>
-                      <td> 
-                        <button
-                        type="button"
-                        class="btn btn-danger"
-                        id="del-guru"
-                        data-id="<?= $data['id_user']; ?>">
-                          Delete
-                        </button>
+                      <td>
+                        <div style="display: flex; flex-direction: row; gap: 1em; justify-content: flex-end; white-space: nowrap;">
+                          <button
+                          type="button"
+                          class="btn btn-warning"
+                          id="edit-guru"
+                          data-id="<?= $data['id_user']; ?>"
+                          data-nm="<?= $data['nm_guru']; ?>"
+                          data-mt="<?= $data['masuk_tahun']; ?>"
+                          data-kt="<?= $data['keluar_tahun']; ?>">
+                            <?= $env['STR_EDIT_TEACHER'] ?>
+                          </button>
+                          <button
+                          type="button"
+                          class="btn btn-danger"
+                          id="reset-guru"
+                          data-id="<?= $data['id_user']; ?>">
+                            <?= $env['STR_RPW_TEACHER'] ?>
+                          </button>
+                          <button
+                          type="button"
+                          class="btn btn-danger"
+                          id="del-guru"
+                          data-id="<?= $data['id_user']; ?>">
+                            <?= $env['STR_DELETE_TEACHER'] ?>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   <?php
@@ -213,15 +210,15 @@
         var initDemos = function () {           
             $(document).on('click', '#form-guru',function (e) {
               swal.fire({
-                  title: "Tambah Guru",
+                  title: "<?= $env['STR_ADD_TEACHER'] ?>",
                   html: '<br><input class="form-control" placeholder="NIP" id="nip">'+
                         '<br><input class="form-control" placeholder="Nama Guru" id="nm_guru">'+
                         '<br><input class="form-control" placeholder="Tahun Masuk" id="th_masuk">'+
                         '<br><input class="form-control" placeholder="Username" id="user">'+
                         '<br><input class="form-control" placeholder="Password" id="pass">',
                   showCancelButton: true,
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
+                  confirmButtonClass: 'btn btn-primary',
+                  cancelButtonClass: 'btn btn-cancel',
                   buttonsStyling: true,
               }).then((result) => {
                   if (result.isConfirmed) {
@@ -257,7 +254,7 @@
               var id = $(this).data('id');
               console.log("RESET");
               swal.fire({
-                  title: "Reset Password Siswa",
+                  title: "<?= $env['STR_RPW_TEACHER'] ?>",
                   html: '<br><input class="form-control" placeholder="Password Baru" id="pass">',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
@@ -285,8 +282,6 @@
                               swal.fire("", "Error: " + xhr.responseText, "error");
                           }
                       });
-                  } else {
-                      swal.fire("", "Cancelled", "error");
                   }
               });
             });
@@ -294,11 +289,11 @@
               var id = $(this).data('id');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
-                text: "Data akan di hapus",
+                text: "Data Guru tidak dapat dikembalikan setelah dihapus!",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
                 confirmButtonText: "Hapus Sekarang!"
               }).then((result) => {
                 if (result.isConfirmed) {
@@ -332,7 +327,7 @@
               var mt = $(this).data('mt');
               var kt = $(this).data('kt');
               swal.fire({
-                  title: "Tambah Guru",
+                  title: "<?= $env['STR_EDIT_TEACHER'] ?>",
                   html: '<br><input class="form-control" placeholder="Nama guru" value="'+nm+'" id="nm">'+
                         '<br><input class="form-control" placeholder="Tahun Masuk" value="'+mt+'" id="mt">'+
                         '<br><input class="form-control" placeholder="Tahun Keluar" value="'+kt+'" id="kt">',

@@ -191,7 +191,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Nama Kelas</th>
                         <th scope="col">Jumlah Siswa</th>
-                        <th scope="col" colspan="3">Aksi</th>
+                        <th scope="col">Aksi</th>
                       </tr>    
                   </thead>
                   <tbody>
@@ -204,25 +204,12 @@
                       <td><?= $i++; ?></td>
                       <td><?= $data['nm_kelas']; ?></td>
                       <td><?= $data['jml_siswa']; ?></td>
-                      <td> <a href="<?= url("/admin/kelas.php?id=".$data['id_kelas']); ?>" type="button" class="btn btn-info">read</a></td>
-                      <td> 
-                        <button
-                        type="button"
-                        class="btn btn-warning"
-                        id="edit-kelas"
-                        data-id="<?= $data['id_kelas']; ?>"
-                        data-kelas="<?= $data['nm_kelas']; ?>">
-                          Edit
-                        </button>
-                      </td>
-                      <td><button
-                        type="button"
-                        class="btn btn-danger"
-                        id="del-kelas"
-                        data-id="<?= $data['id_kelas']; ?>"
-                        >
-                          Delete
-                        </button>
+                      <td>
+                        <div style="display: flex; flex-direction: row; gap: 1em; justify-content: flex-end; white-space: nowrap;">
+                          <a href="<?= url("/admin/kelas.php?id=".$data['id_kelas']); ?>" type="button" class="btn btn-primary"><?= $env['STR_VIEW_CLASS'] ?></a>
+                          <button type="button" class="btn btn-warning" id="edit-kelas" data-id="<?= $data['id_kelas']; ?>" data-kelas="<?= $data['nm_kelas']; ?>"><?= $env['STR_CHANGE_CLASS_NAME'] ?></button>
+                          <button type="button" class="btn btn-danger" id="del-kelas" data-id="<?= $data['id_kelas']; ?>"><?= $env['STR_DELETE_CLASS'] ?></button>
+                        </div>
                       </td>
                     </tr>
                   <?php
@@ -315,7 +302,7 @@
               var kelas = $(this).data('kelas');
               var id_kelas = $(this).data('id');
               swal.fire({
-                  title: "Edit",
+                  title: "<?= $env['STR_CHANGE_CLASS_NAME'] ?>",
                   html: '<br><input class="form-control" placeholder="input2" value="'+kelas+'" id="nama_kelas" required>',
                   showCancelButton: true,
                   confirmButtonClass: 'btn btn-success',
@@ -348,6 +335,7 @@
                   }
               });
             });
+             // Check for click event on form-siswa button
              $("#form-siswa").click(function (e) {
               swal.fire({
                   title: "Tambah Siswa",
@@ -424,7 +412,7 @@
               var id_kelas = $(this).data('id');
               Swal.fire({
                 title: "Apakah Anda Yakin?",
-                text: "Data akan di hapus",
+                text: "Kelas tidak dapat dikembalikan setelah terhapus!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",

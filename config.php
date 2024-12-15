@@ -1,11 +1,16 @@
 <?php
 $env = parse_ini_file('.env');
-$host = $env['HOST'];
-$username = $env['USERNAME'];
-$password = $env['PASSWORD'];
-$dbname = $env['DB_NAME'];
+$host = "127.0.0.1:3306";
+$mysql_username = "sekolah";
+$mysql_password = "123";
+$dbname = "sekolah";
 
-$conn = new mysqli($host, $username, $password, $dbname);
+// Fungsi untuk generate OTP
+function generateOtp() {
+    return rand(100000, 999999); // Menghasilkan OTP 6 digit acak
+}
+
+$conn = new mysqli($host, $mysql_username, $mysql_password, $dbname);
 
 date_default_timezone_set('Asia/Jakarta');
 

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>E-Learning|Admin</title>
+    <title>E-Learning|Guru</title>
     <meta
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
@@ -75,7 +75,7 @@
               <h3 class="fw-bold mb-3">Kelas</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
-                  <a href="<?= url("/guru/"); ?>">
+                  <a href="<?= url("/guru"); ?>">
                     <i class="icon-home"></i>
                   </a>
                 </li>

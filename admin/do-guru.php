@@ -12,10 +12,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_user = $_POST['idUser'];
     $nm_guru = $_POST['nmGuru'];
     $tahun_masuk = $_POST['thMasuk'];
-    $username = $_POST['username'];
+    $username = $_POST['email'];
     $password = $_POST['password'];
     $conn->query("INSERT INTO tbguru(`id_user`, `nm_guru`, masuk_tahun) VALUES ('$id_user', '$nm_guru', '$tahun_masuk');");
-    $conn->query("INSERT INTO tbuser(uid, `username`, `password`, `level`) VALUES ('$id_user','$username','$password','2');");
+    $conn->query("INSERT INTO tbuser(`uid`, `email`, `password`, `level`) VALUES ('$id_user','$username','$password','2');");
     $response = "Berhasil Tambah Guru";
     http_response_code(200);
   }else{
